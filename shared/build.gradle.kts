@@ -3,6 +3,8 @@ import org.jetbrains.kotlin.gradle.dsl.JvmTarget
 plugins {
     alias(libs.plugins.kotlinMultiplatform)
     alias(libs.plugins.androidLibrary)
+    alias(libs.plugins.ksp)
+    alias(libs.plugins.room)
 }
 
 kotlin {
@@ -29,13 +31,22 @@ kotlin {
 
     sourceSets {
         commonMain.dependencies {
+            // COROUTINES
             implementation(libs.kotlinx.coroutines.core)
+            // KOIN
             implementation(libs.koin.core)
+            // ROOM
+            implementation(libs.androidx.room.runtime)
+            implementation(libs.sqlite.bundled)
         }
         commonTest.dependencies {
             implementation(libs.kotlin.test)
         }
     }
+}
+
+room {
+    schemaDirectory("$projectDir/schemas")
 }
 
 android {
@@ -51,4 +62,5 @@ android {
 }
 dependencies {
     implementation(libs.androidx.core)
+    ksp(libs.androidx.room.compiler)
 }

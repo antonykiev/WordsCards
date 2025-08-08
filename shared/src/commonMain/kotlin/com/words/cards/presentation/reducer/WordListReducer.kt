@@ -6,7 +6,9 @@ import com.words.cards.presentation.state.State
 import com.words.cards.presentation.state.WordListScreenContent
 import kotlinx.coroutines.flow.MutableStateFlow
 
-class WordListReducer : Reducer<WordListEvent, WordListScreenContent, WordListIntent> {
+class WordListReducer(
+
+) : Reducer<WordListEvent, WordListScreenContent, WordListIntent> {
     override val mutableState: MutableStateFlow<State<WordListScreenContent, WordListEvent>> =
         MutableStateFlow(
             State(
@@ -21,13 +23,17 @@ class WordListReducer : Reducer<WordListEvent, WordListScreenContent, WordListIn
             WordListIntent.InitialLoad -> {
 
             }
-            is WordListIntent.OnPlusClicked -> TODO()
+            is WordListIntent.OnPlusClicked -> {
+                updateEvent(WordListEvent.OpenNewWord(intent.word))
+            }
             is WordListIntent.OnSearchWordChanged -> {
                 updateContent {
                     it.copy(searchWord = intent.word)
                 }
             }
-            is WordListIntent.OnWordClicked -> TODO()
+            is WordListIntent.OnWordClicked -> {
+                updateEvent(WordListEvent.OpenWord(intent.wordId))
+            }
         }
     }
 }
