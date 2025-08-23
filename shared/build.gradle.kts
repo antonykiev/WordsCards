@@ -5,6 +5,7 @@ plugins {
     alias(libs.plugins.androidLibrary)
     alias(libs.plugins.ksp)
     alias(libs.plugins.room)
+    alias(libs.plugins.serialization)
 }
 
 kotlin {
@@ -38,9 +39,13 @@ kotlin {
             // ROOM
             implementation(libs.androidx.room.runtime)
             implementation(libs.sqlite.bundled)
+
+            implementation(libs.kotlinx.serialization.json)
         }
         commonTest.dependencies {
             implementation(libs.kotlin.test)
+            implementation(libs.mockk)
+            implementation(libs.kotlinx.coroutines.test)
         }
     }
 }

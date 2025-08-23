@@ -17,7 +17,7 @@ interface Reducer<E, C, I> {
         }
     }
 
-    suspend fun updateContent(content: (C) -> C) {
+    suspend fun updateContent(content: suspend (C) -> C) {
         mutableState.update {
             it.copy(content = content(it.content))
         }

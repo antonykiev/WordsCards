@@ -24,7 +24,7 @@ class WordListReducer(
 
             }
             is WordListIntent.OnPlusClicked -> {
-                updateEvent(WordListEvent.OpenNewWord(intent.word))
+                updateEvent(WordListEvent.OpenNewWord(intent.word.trim()))
             }
             is WordListIntent.OnSearchWordChanged -> {
                 updateContent {

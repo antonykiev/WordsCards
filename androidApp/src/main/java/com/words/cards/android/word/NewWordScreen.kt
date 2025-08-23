@@ -1,6 +1,5 @@
 package com.words.cards.android.word
 
-import android.util.Log
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Spacer
@@ -16,9 +15,10 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
-import com.words.cards.presentation.event.WordListEvent
 import com.words.cards.presentation.intent.WordIntent
-import com.words.cards.presentation.intent.WordListIntent
+import com.words.cards.presentation.state.LoadableContent
+import com.words.cards.presentation.state.TranscriptionState
+import com.words.cards.presentation.state.WordScreenContent
 import org.koin.androidx.compose.koinViewModel
 
 @Composable
@@ -30,7 +30,7 @@ fun NewWordScreen(
     val state by viewModel.state.collectAsStateWithLifecycle()
 
     LaunchedEffect(Unit) {
-        viewModel.onIntent(WordIntent.InitialLoad)
+        viewModel.onIntent(WordIntent.InitialLoad(newWord))
     }
 
     LaunchedEffect(state.event) {
@@ -41,16 +41,15 @@ fun NewWordScreen(
 
     NewWordPane(
         modifier = modifier.fillMaxSize(),
-        newWord = newWord
+        content = state.content
     )
 }
 
 @Composable
 fun NewWordPane(
     modifier: Modifier = Modifier,
-    newWord: String,
+    content: WordScreenContent,
 ) {
-    Log.d("NewWordPane", "newWord $newWord")
     Column(
         modifier = modifier
             .fillMaxSize()
@@ -58,16 +57,27 @@ fun NewWordPane(
             .padding(16.dp)
     ) {
         Text(
-            text = newWord,
+            text = content.word,
         )
         Spacer(Modifier.height(16.dp))
         Text(
             text = "ошеломленный",
         )
         Spacer(Modifier.height(16.dp))
-        Text(
-            text = "[ˈflæbəɡæstəd]",
-        )
+        when (val transcription = content.transcription) {
+            is TranscriptionState.Error -> {
+
+            }
+            is TranscriptionState.Loaded -> {
+                Text(
+                    text = transcription.data,
+                )
+            }
+            TranscriptionState.Loading -> {
+
+            }
+        }
+
     }
 }
 
@@ -76,6 +86,12 @@ fun NewWordPane(
 private fun NewWordPanePreview() {
     NewWordPane(
         modifier = Modifier,
-        newWord = "Flabbergasted"
+        content = WordScreenContent(
+            word = "flabbergasted",
+            transcription = TranscriptionState.Loaded("ˈflæbərˌɡæstɪd"),
+            exampleList = LoadableContent.Loading,
+            translation = LoadableContent.Loading,
+            image = LoadableContent.Loading
+        )
     )
 }

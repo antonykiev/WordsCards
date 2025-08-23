@@ -1,6 +1,10 @@
 [versions]
 agp = "8.6.0"
 kotlin = "2.0.0"
+kotlinxCoroutinesTest = "1.9.0"
+kotlinxSerializationJson = "1.7.3"
+mockk = "1.13.12"
+serialization = "2.0.20"
 compose = "1.5.4"
 compose-material3 = "1.1.2"
 androidx-activityCompose = "1.8.0"
@@ -29,6 +33,9 @@ koin-android = { module = "io.insert-koin:koin-android", version.ref = "koinVers
 koin-androidx-compose = { module = "io.insert-koin:koin-androidx-compose", version.ref = "koinVersion" }
 koin-core = { module = "io.insert-koin:koin-core", version.ref = "koinVersion" }
 androidx-core = { group = "androidx.core", name = "core", version.ref = "core" }
+kotlinx-coroutines-test = { module = "org.jetbrains.kotlinx:kotlinx-coroutines-test", version.ref = "kotlinxCoroutinesTest" }
+kotlinx-serialization-json = { module = "org.jetbrains.kotlinx:kotlinx-serialization-json", version.ref = "kotlinxSerializationJson" }
+mockk = { module = "io.mockk:mockk", version.ref = "mockk" }
 sqlite-bundled = { module = "androidx.sqlite:sqlite-bundled", version.ref = "sqlite" }
 
 [plugins]
@@ -38,5 +45,6 @@ kotlinAndroid = { id = "org.jetbrains.kotlin.android", version.ref = "kotlin" }
 kotlinMultiplatform = { id = "org.jetbrains.kotlin.multiplatform", version.ref = "kotlin" }
 kotlinCocoapods = { id = "org.jetbrains.kotlin.native.cocoapods", version.ref = "kotlin" }
 compose-compiler = { id = "org.jetbrains.kotlin.plugin.compose", version.ref = "kotlin" }
+serialization = { id = "org.jetbrains.kotlin.plugin.serialization", version.ref = "serialization" }
 ksp = { id = "com.google.devtools.ksp", version.ref = "ksp" }
 room = { id = "androidx.room", version.ref = "androidx-room" }
