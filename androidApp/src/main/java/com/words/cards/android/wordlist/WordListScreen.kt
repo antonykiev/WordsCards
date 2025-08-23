@@ -31,15 +31,19 @@ import androidx.compose.ui.text.input.ImeAction
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
+import com.words.cards.presentation.event.WordListEvent
 import com.words.cards.presentation.intent.WordListIntent
 import com.words.cards.presentation.state.WordItem
 import com.words.cards.presentation.state.WordListScreenContent
 import org.koin.androidx.compose.koinViewModel
 
 @Composable
-fun WordListScreen(modifier: Modifier = Modifier) {
+fun WordListScreen(
+    modifier: Modifier = Modifier,
+   onOpenNewWord: (word: String) -> Unit
+) {
 
-    val viewModel = koinViewModel<WordLIstViewModel>()
+    val viewModel = koinViewModel<WordListViewModel>()
     val state by viewModel.state.collectAsStateWithLifecycle()
 
     LaunchedEffect(Unit) {
@@ -47,8 +51,12 @@ fun WordListScreen(modifier: Modifier = Modifier) {
     }
 
     LaunchedEffect(state.event) {
-        when (state.event) {
-
+        when (val event = state.event) {
+            WordListEvent.Empty -> { }
+            is WordListEvent.OpenWord -> {}
+            is WordListEvent.OpenNewWord -> {
+                onOpenNewWord(event.word)
+            }
         }
     }
 
@@ -82,7 +90,8 @@ fun WordListPane(
         SearchView(
             modifier = Modifier,
             value = text,
-            onValueChange = onValueChange
+            onValueChange = onValueChange,
+            onPlusClicked = onPlusClicked,
         )
         LazyColumn {
             itemsIndexed(
@@ -104,7 +113,7 @@ fun SearchView(
     modifier: Modifier = Modifier,
     value: String,
     onValueChange: (String) -> Unit = {},
-    onPlusClicked: () -> Unit = {},
+    onPlusClicked: (newWord: String) -> Unit = {},
     placeholder: String = "Type something...",
     keyboardOptions: KeyboardOptions = KeyboardOptions.Default.copy(
         imeAction = ImeAction.Done
@@ -131,7 +140,10 @@ fun SearchView(
             singleLine = singleLine,
             maxLines = maxLines,
             trailingIcon = {
-                Box(modifier = Modifier.padding(end = 8.dp)) {
+                Box(
+                    modifier = Modifier
+                        .padding(end = 8.dp)
+                ) {
 
                 }
             }
@@ -146,7 +158,9 @@ fun SearchView(
             modifier = Modifier.padding(end = 8.dp)
         ) {
             IconButton(
-                onClick = onPlusClicked,
+                onClick = {
+                    onPlusClicked(value)
+                },
                 modifier = Modifier.padding(start = 8.dp)
             ) {
                 Icon(

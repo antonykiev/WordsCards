@@ -8,23 +8,23 @@ class WordDataSourceImpl(
     private val database: AppDatabase
 ) : WordDataSource {
 
-    override fun getAllWords(): Flow<Result<List<WordEntity>>> {
+    override fun getAllWords(): Flow<List<WordEntity>> {
         return database.wordDao().getAllWords()
     }
 
     override suspend fun getWordById(id: Long): Result<WordEntity?> {
-        return database.wordDao().getWordById(id)
+        return runCatching { database.wordDao().getWordById(id) }
     }
 
     override suspend fun insertWord(word: WordEntity): Result<Long> {
-        return database.wordDao().insertWord(word)
+        return runCatching { database.wordDao().insertWord(word) }
     }
 
     override suspend fun updateWord(word: WordEntity): Result<Int> {
-        return database.wordDao().updateWord(word)
+        return runCatching { database.wordDao().updateWord(word) }
     }
 
     override suspend fun deleteWord(word: WordEntity): Result<Int> {
-        return database.wordDao().deleteWord(word)
+        return runCatching { database.wordDao().deleteWord(word) }
     }
 }
