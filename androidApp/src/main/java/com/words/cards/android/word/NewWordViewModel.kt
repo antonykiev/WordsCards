@@ -7,14 +7,14 @@ import com.words.cards.presentation.StateViewModel
 import com.words.cards.presentation.event.WordEvent
 import com.words.cards.presentation.event.WordListEvent
 import com.words.cards.presentation.intent.WordIntent
-import com.words.cards.presentation.reducer.WordReducer
+import com.words.cards.presentation.reducer.NewWordReducer
 import com.words.cards.presentation.state.State
 import com.words.cards.presentation.state.WordScreenContent
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.launch
 
-class WordViewModel(
-    private val reducer: WordReducer,
+class NewWordViewModel(
+    private val reducer: NewWordReducer,
 ) : ViewModel(),
     StateViewModel<WordEvent, WordScreenContent, WordIntent>,
     EventHandle<WordListEvent> {

@@ -50,5 +50,11 @@ dependencies {
     implementation(libs.koin.android)
     //Navigation
     implementation (libs.androidx.navigation.compose)
+    //KTOR ENGINE
+    implementation(libs.ktor.client.android)
+
+    implementation(libs.room.runtime)
+            compileOnly(libs.room.common)
+            implementation(libs.androidx.room.ktx)
 
 }

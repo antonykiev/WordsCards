@@ -1,9 +1,12 @@
 package com.words.cards.android.word
 
+import androidx.activity.compose.BackHandler
 import androidx.compose.foundation.background
+import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.material3.MaterialTheme
@@ -11,13 +14,15 @@ import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
+import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
+import com.words.cards.android.MyApplicationTheme
+import com.words.cards.android.design.CardButton
 import com.words.cards.presentation.intent.WordIntent
 import com.words.cards.presentation.state.LoadableContent
-import com.words.cards.presentation.state.TranscriptionState
 import com.words.cards.presentation.state.WordScreenContent
 import org.koin.androidx.compose.koinViewModel
 
@@ -25,8 +30,12 @@ import org.koin.androidx.compose.koinViewModel
 fun NewWordScreen(
     modifier: Modifier = Modifier,
     newWord: String,
+    onBack: () -> Unit
 ) {
-    val viewModel = koinViewModel<WordViewModel>()
+
+    BackHandler(onBack = onBack)
+
+    val viewModel = koinViewModel<NewWordViewModel>()
     val state by viewModel.state.collectAsStateWithLifecycle()
 
     LaunchedEffect(Unit) {
@@ -41,7 +50,10 @@ fun NewWordScreen(
 
     NewWordPane(
         modifier = modifier.fillMaxSize(),
-        content = state.content
+        content = state.content,
+        onSaveClicked = {
+            viewModel.onIntent(WordIntent.OnSaveClicked)
+        }
     )
 }
 
@@ -49,49 +61,73 @@ fun NewWordScreen(
 fun NewWordPane(
     modifier: Modifier = Modifier,
     content: WordScreenContent,
+    onSaveClicked: () -> Unit
 ) {
-    Column(
+
+    Box(
         modifier = modifier
             .fillMaxSize()
-            .background(MaterialTheme.colorScheme.background)
-            .padding(16.dp)
     ) {
-        Text(
-            text = content.word,
-        )
-        Spacer(Modifier.height(16.dp))
-        Text(
-            text = "ошеломленный",
-        )
-        Spacer(Modifier.height(16.dp))
-        when (val transcription = content.transcription) {
-            is TranscriptionState.Error -> {
-
-            }
-            is TranscriptionState.Loaded -> {
-                Text(
-                    text = transcription.data,
-                )
-            }
-            TranscriptionState.Loading -> {
-
-            }
+        Column(
+            modifier = modifier
+                .fillMaxSize()
+                .background(MaterialTheme.colorScheme.background)
+                .padding(16.dp)
+                .align(Alignment.TopCenter)
+        ) {
+            Text(
+                text = content.word,
+            )
+            Spacer(Modifier.height(16.dp))
+            Spacer(Modifier.height(16.dp))
+            Text(
+                text = "Transcription:",
+            )
+            Text(
+                text = content.transcription,
+            )
+            Spacer(Modifier.height(16.dp))
+            Text(
+                text = "Translation:",
+            )
+            Text(
+                text = content.translation,
+            )
+            Spacer(Modifier.height(16.dp))
+            Text(
+                text = "Examples:",
+            )
+            Text(
+                text = content.exampleList,
+            )
         }
 
+        CardButton(
+            modifier = Modifier
+                .align(Alignment.BottomCenter)
+                .fillMaxWidth()
+                .padding(horizontal = 24.dp)
+                .padding(bottom = 24.dp),
+            text = "Save",
+            onClick = onSaveClicked
+        )
     }
 }
 
 @Preview
 @Composable
 private fun NewWordPanePreview() {
-    NewWordPane(
-        modifier = Modifier,
-        content = WordScreenContent(
-            word = "flabbergasted",
-            transcription = TranscriptionState.Loaded("ˈflæbərˌɡæstɪd"),
-            exampleList = LoadableContent.Loading,
-            translation = LoadableContent.Loading,
-            image = LoadableContent.Loading
+    MyApplicationTheme {
+        NewWordPane(
+            modifier = Modifier,
+            content = WordScreenContent(
+                word = "flabbergasted",
+                transcription = "ˈflæbərˌɡæstɪd",
+                exampleList = "I was flabbergasted by the news of winning the lottery.",
+                translation = "ошеломленный",
+                image = LoadableContent.Loading
+            ),
+            onSaveClicked = {}
         )
-    )
+    }
 }

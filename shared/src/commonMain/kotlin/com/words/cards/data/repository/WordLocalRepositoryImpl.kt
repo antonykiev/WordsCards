@@ -2,12 +2,12 @@ package com.words.cards.data.repository
 
 import com.words.cards.data.datasource.WordDataSource
 import com.words.cards.data.db.entity.WordEntity
-import com.words.cards.domain.repository.WordRepository
+import com.words.cards.domain.repository.WordLocalRepository
 import kotlinx.coroutines.flow.Flow
 
-class WordRepositoryImpl(
+class WordLocalRepositoryImpl(
     private val dataSource: WordDataSource
-) : WordRepository {
+) : WordLocalRepository {
 
     override fun getAllWords(): Flow<List<WordEntity>> {
         return dataSource.getAllWords()

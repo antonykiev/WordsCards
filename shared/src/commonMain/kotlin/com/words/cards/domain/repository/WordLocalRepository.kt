@@ -4,7 +4,7 @@ import com.words.cards.data.db.entity.WordEntity
 import com.words.cards.domain.entity.WordDomain
 import kotlinx.coroutines.flow.Flow
 
-interface WordRepository {
+interface WordLocalRepository {
     fun getAllWords(): Flow<List<WordEntity>>
     suspend fun getWordById(id: Long): Result<WordEntity?>
     suspend fun insertWord(wordEntity: WordEntity): Result<Long>

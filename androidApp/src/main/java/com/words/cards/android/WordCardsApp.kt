@@ -4,7 +4,7 @@ import android.app.Application
 import com.words.cards.android.login.loginAndroidModule
 import com.words.cards.android.main.mainModule
 import com.words.cards.android.splash.splashModule
-import com.words.cards.android.word.wordModule
+import com.words.cards.android.word.newWordModule
 import com.words.cards.android.wordlist.wordsListModule
 import com.words.cards.di.sharedDomainModule
 import org.koin.android.ext.koin.androidContext
@@ -21,7 +21,7 @@ class WordCardsApp : Application() {
                         loginAndroidModule +
                         mainModule +
                         wordsListModule +
-                        wordModule
+                        newWordModule
             )
             androidContext(this@WordCardsApp)
         }

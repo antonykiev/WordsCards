@@ -1,11 +1,13 @@
 package com.words.cards.android.main
 
+import android.util.Log
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.size
 import androidx.compose.material3.Icon
 import androidx.compose.material3.NavigationBar
 import androidx.compose.material3.NavigationBarItem
 import androidx.compose.material3.Scaffold
+import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
@@ -36,6 +38,7 @@ import org.koin.androidx.compose.koinViewModel
 @Composable
 fun MainScreen(
     modifier: Modifier = Modifier,
+    onOpenNewWord: (newWord: String) -> Unit
 ) {
     val navController = rememberNavController()
     val navBackStackEntry by navController.currentBackStackEntryAsState()
@@ -48,9 +51,19 @@ fun MainScreen(
         viewModel.onIntent(MainIntent.InitialLoad)
     }
 
+    Log.d("MainScreen", "state: ${state}")
+
     LaunchedEffect(state.event) {
-        when (state.event) {
-            MainEvent.Empty -> {}
+        when (val event = state.event) {
+            MainEvent.Empty -> {
+
+            }
+
+            is MainEvent.OpenWord -> {
+                Log.d("MainScreen", "onOpenNewWord: ${event.newWord}")
+                viewModel.onEventHandled(event)
+                onOpenNewWord(event.newWord)
+            }
         }
     }
 
@@ -58,7 +71,10 @@ fun MainScreen(
         modifier = modifier,
         navController = navController,
         currentRoute = currentRoute,
-        content = state.content
+        content = state.content,
+        onOpenNewWord = { newWord ->
+            viewModel.onIntent(MainIntent.OpenNewWord(newWord))
+        }
     )
 }
 
@@ -68,6 +84,7 @@ fun MainPane(
     navController: NavHostController = rememberNavController(),
     currentRoute: String?,
     content: MainScreenContent,
+    onOpenNewWord: (newWord: String) -> Unit
 ) {
     Scaffold(
         modifier = modifier,
@@ -83,7 +100,7 @@ fun MainPane(
                                 contentDescription = item.text
                             )
                         },
-                        //label = { Text(item.text) },
+                        label = { Text(item.text) },
                         selected = currentRoute == item.route,
                         onClick = {
                             navController.navigate(item.route) {
@@ -104,18 +121,12 @@ fun MainPane(
             composable("word_list") {
                 WordListScreen(
                     onOpenNewWord = { newWordText ->
-                        navController.navigate("new_word/$newWordText")
+                        onOpenNewWord(newWordText)
                     }
                 )
             }
-            composable("settings") { SettingsScreen() }
-            composable(
-                route = "new_word/{newWordText}",
-                arguments = listOf(navArgument("newWordText") { type = NavType.StringType })
-            ) { backStackEntry ->
-                val newWordText = backStackEntry.arguments?.getString("newWordText")
-                    ?: throw IllegalArgumentException("newWordText must be provided")
-                NewWordScreen(newWord = newWordText)
+            composable("settings") {
+                SettingsScreen()
             }
         }
     }
@@ -142,7 +153,8 @@ private fun MainScreenPreview() {
                         route = "word_list"
                     )
                 )
-            )
+            ),
+            onOpenNewWord = {}
         )
     }
 }

@@ -39,7 +39,12 @@ kotlin {
             // ROOM
             implementation(libs.androidx.room.runtime)
             implementation(libs.sqlite.bundled)
-
+            // KTOR
+            implementation(libs.ktor.client.core)
+            implementation(libs.ktor.client.content.negotiation)
+            implementation(libs.ktor.serialization.kotlinx.json)
+            implementation(libs.ktor.client.logging)
+            // SERIALIZATION
             implementation(libs.kotlinx.serialization.json)
         }
         commonTest.dependencies {

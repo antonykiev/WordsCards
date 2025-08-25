@@ -40,9 +40,8 @@ import org.koin.androidx.compose.koinViewModel
 @Composable
 fun WordListScreen(
     modifier: Modifier = Modifier,
-   onOpenNewWord: (word: String) -> Unit
+    onOpenNewWord: (word: String) -> Unit,
 ) {
-
     val viewModel = koinViewModel<WordListViewModel>()
     val state by viewModel.state.collectAsStateWithLifecycle()
 
@@ -52,10 +51,11 @@ fun WordListScreen(
 
     LaunchedEffect(state.event) {
         when (val event = state.event) {
-            WordListEvent.Empty -> { }
+            WordListEvent.Empty -> {}
             is WordListEvent.OpenWord -> {}
             is WordListEvent.OpenNewWord -> {
                 onOpenNewWord(event.word)
+                viewModel.onEventHandled(event)
             }
         }
     }
@@ -130,7 +130,7 @@ fun SearchView(
             value = value,
             onValueChange = onValueChange,
             modifier = Modifier.fillMaxWidth(),
-            placeholder = placeholder?.let { { Text(it) } },
+            placeholder = placeholder.let { { Text(it) } },
             colors = TextFieldDefaults.colors(
                 unfocusedContainerColor = Color.Transparent,
                 focusedContainerColor = Color.Transparent,

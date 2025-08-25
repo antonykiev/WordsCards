@@ -7,6 +7,7 @@ import com.words.cards.presentation.state.State
 import com.words.cards.resource.ResourceIds
 import com.words.cards.resource.ResourceProvider
 import kotlinx.coroutines.flow.MutableStateFlow
+import kotlinx.coroutines.flow.update
 
 class MainReducer(
     private val resourceProvider: ResourceProvider,
@@ -47,6 +48,10 @@ class MainReducer(
 
             MainIntent.OnWordListClicked -> {
 
+            }
+
+            is MainIntent.OpenNewWord -> {
+                updateEvent(MainEvent.OpenWord(intent.newWord))
             }
         }
     }
