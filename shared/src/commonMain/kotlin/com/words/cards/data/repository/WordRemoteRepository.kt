@@ -15,17 +15,14 @@ class WordRemoteRepository(
                 .content
                 .removePrefix("```")
                 .removeSuffix("```")
+                .substringAfter("{")
+                .substringBefore("}")
+                .let { "{$it}" }
             println(content)
 
             Json.decodeFromString<ChatPresentation>(
                 content
             )
         }
-    }
-
-    private fun mapToChatPresentation(jsonString: String): ChatPresentation {
-        return Json.decodeFromString<ChatPresentation>(
-            jsonString
-        )
     }
 }

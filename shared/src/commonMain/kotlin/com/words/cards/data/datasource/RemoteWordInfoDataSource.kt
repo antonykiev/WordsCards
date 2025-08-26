@@ -27,7 +27,7 @@ class RemoteWordInfoDataSource(
         private val TOKEN = "csk-fxv5ejcxc5jw93rymf5pdxev6h65e3fcwxpjf8h2nxpyp2hj"
         private val LMM_MODEL = "llama-4-scout-17b-16e-instruct"
         private fun promt(word: String) = """
-            generate translation of word $word on Russian.
+            generate translation with most relevant synonyms of word $word on Russian.
             write else English description what this word means.
             generate 5 English sentences with word $word.
             don`t give me any additional information only what I ask you.

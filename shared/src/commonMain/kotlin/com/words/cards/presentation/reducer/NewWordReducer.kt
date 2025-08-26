@@ -31,10 +31,17 @@ class NewWordReducer(
                 updateContent {
                     val transcription = getTranscriptionUseCase.invoke(intent.word)
                         .getOrElse { "Transcription not available" }
-                    val wordInfo = wordRemoteRepository.getWordInfo(intent.word).getOrNull()
+                    val wordInfo = wordRemoteRepository.getWordInfo(intent.word)
+                        .onFailure {
+                            println("NewWordReducer wordRemoteRepository.getWordInfo FAILED $it")
+                        }
+                        .getOrNull()
+
+                    println("NewWordReducer wordInfo $wordInfo")
 
                     it.copy(
                         word = intent.word,
+                        description = wordInfo?.description.orEmpty(),
                         transcription = transcription,
                         translation = wordInfo?.translation.orEmpty(),
                         exampleList = wordInfo?.sentences
@@ -53,7 +60,7 @@ class NewWordReducer(
                 wordLocalRepository.insertWord(
                     WordEntity(
                         wordText = wordInfo.word,
-                        wordDescription = "",
+                        wordDescription = wordInfo.description,
                         wordTranslation = wordInfo.translation,
                         wordTranscription = wordInfo.transcription,
                         createdAt = 1L

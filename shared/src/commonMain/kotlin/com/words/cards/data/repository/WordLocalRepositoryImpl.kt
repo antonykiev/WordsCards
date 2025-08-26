@@ -9,7 +9,7 @@ class WordLocalRepositoryImpl(
     private val dataSource: WordDataSource
 ) : WordLocalRepository {
 
-    override fun getAllWords(): Flow<List<WordEntity>> {
+    override fun allWordsFlow(): Flow<List<WordEntity>> {
         return dataSource.getAllWords()
     }
 

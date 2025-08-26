@@ -79,6 +79,12 @@ fun NewWordPane(
                 text = content.word,
             )
             Spacer(Modifier.height(16.dp))
+            Text(
+                text = "Description:",
+            )
+            Text(
+                text = content.description,
+            )
             Spacer(Modifier.height(16.dp))
             Text(
                 text = "Transcription:",
@@ -125,7 +131,8 @@ private fun NewWordPanePreview() {
                 transcription = "ˈflæbərˌɡæstɪd",
                 exampleList = "I was flabbergasted by the news of winning the lottery.",
                 translation = "ошеломленный",
-                image = LoadableContent.Loading
+                image = LoadableContent.Loading,
+                description = "flabbergasted means to be extremely surprised or shocked."
             ),
             onSaveClicked = {}
         )

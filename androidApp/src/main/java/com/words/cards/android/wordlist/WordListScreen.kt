@@ -6,10 +6,14 @@ import androidx.compose.animation.fadeIn
 import androidx.compose.animation.fadeOut
 import androidx.compose.animation.slideInHorizontally
 import androidx.compose.animation.slideOutHorizontally
+import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.Row
+import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.itemsIndexed
 import androidx.compose.foundation.text.KeyboardActions
@@ -18,6 +22,7 @@ import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Add
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
+import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.material3.TextField
 import androidx.compose.material3.TextFieldDefaults
@@ -86,7 +91,10 @@ fun WordListPane(
     onWordClicked: (wordId: Long) -> Unit,
 ) {
 
-    Column {
+    Column(
+        modifier = modifier
+            .background(color = MaterialTheme.colorScheme.background),
+    ) {
         SearchView(
             modifier = Modifier,
             value = text,
@@ -179,6 +187,18 @@ fun WordItem(
     item: WordItem,
     onWordClicked: (wordId: Long) -> Unit,
 ) {
+    Column(
+        modifier = modifier
+            .fillMaxWidth()
+            .padding(vertical = 8.dp)
+    ) {
+        Row {
+            Text(item.word)
+            Spacer(Modifier.width(8.dp))
+            Text(item.transcription)
+        }
+        Text(item.description)
+    }
 
 }
 
@@ -187,5 +207,42 @@ fun WordItem(
 private fun SearchViewPreview() {
     SearchView(
         value = ""
+    )
+}
+
+@Preview
+@Composable
+private fun WordListPanePreview() {
+    WordListPane(
+        content = WordListScreenContent(
+            searchWord = "flabbergasted",
+            wordsItems = listOf(
+                WordItem(
+                    word = "flabbergasted",
+                    translation = "ошеломленный",
+                    transcription = "flæbərɡæstɪd",
+                    description = "very surprised",
+                    id = 1
+                ),
+                WordItem(
+                    word = "flabbergasted",
+                    translation = "ошеломленный",
+                    transcription = "flæbərɡæstɪd",
+                    description = "very surprised",
+                    id = 2
+                ),
+                WordItem(
+                    word = "flabbergasted",
+                    translation = "ошеломленный",
+                    transcription = "flæbərɡæstɪd",
+                    description = "very surprised",
+                    id = 3
+                )
+            )
+        ),
+        text = "",
+        onValueChange = { },
+        onPlusClicked = { },
+        onWordClicked = { }
     )
 }

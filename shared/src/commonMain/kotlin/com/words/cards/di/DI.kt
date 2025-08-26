@@ -49,7 +49,7 @@ val mainDomainModule = module {
 val wordListDomainModule = module {
     factory {
         WordListReducer(
-
+            wordLocalRepository = get<WordLocalRepository>()
         )
     }
 }
