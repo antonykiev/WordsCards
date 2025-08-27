@@ -20,9 +20,9 @@ import androidx.navigation.compose.currentBackStackEntryAsState
 import androidx.navigation.compose.rememberNavController
 import androidx.navigation.navArgument
 import com.words.cards.android.login.LoginScreen
-import com.words.cards.android.main.MainScreen
 import com.words.cards.android.splash.SplashScreen
-import com.words.cards.android.word.NewWordScreen
+import com.words.cards.android.word_new.NewWordScreen
+import com.words.cards.android.wordlist.WordListScreen
 
 class MainActivity : ComponentActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -64,12 +64,12 @@ class MainActivity : ComponentActivity() {
                     modifier = Modifier
                         .padding(paddingValues),
                     onLoginSuccessfully = {
-                        navController.navigate("main")
+                        navController.navigate("word_list")
                     }
                 )
             }
-            composable(route = "main") {
-                MainScreen(
+            composable("word_list") {
+                WordListScreen(
                     modifier = Modifier
                         .padding(paddingValues),
                     onOpenNewWord = { newWordText ->

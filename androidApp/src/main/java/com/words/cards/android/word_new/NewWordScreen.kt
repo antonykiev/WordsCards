@@ -1,4 +1,4 @@
-package com.words.cards.android.word
+package com.words.cards.android.word_new
 
 import androidx.activity.compose.BackHandler
 import androidx.compose.foundation.background
@@ -21,6 +21,7 @@ import androidx.compose.ui.unit.dp
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import com.words.cards.android.MyApplicationTheme
 import com.words.cards.android.design.CardButton
+import com.words.cards.presentation.event.WordNewEvent
 import com.words.cards.presentation.intent.WordIntent
 import com.words.cards.presentation.state.LoadableContent
 import com.words.cards.presentation.state.WordScreenContent
@@ -32,7 +33,6 @@ fun NewWordScreen(
     newWord: String,
     onBack: () -> Unit
 ) {
-
     BackHandler(onBack = onBack)
 
     val viewModel = koinViewModel<NewWordViewModel>()
@@ -43,9 +43,13 @@ fun NewWordScreen(
     }
 
     LaunchedEffect(state.event) {
-        when (val event = state.event) {
-
+        when (val event: WordNewEvent = state.event) {
+            WordNewEvent.Empty -> {}
+            WordNewEvent.Saved -> {
+                onBack()
+            }
         }
+            viewModel.onEventHandled(state.event)
     }
 
     NewWordPane(

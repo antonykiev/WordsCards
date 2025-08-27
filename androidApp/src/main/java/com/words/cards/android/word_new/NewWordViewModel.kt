@@ -1,10 +1,10 @@
-package com.words.cards.android.word
+package com.words.cards.android.word_new
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.words.cards.presentation.EventHandle
 import com.words.cards.presentation.StateViewModel
-import com.words.cards.presentation.event.WordEvent
+import com.words.cards.presentation.event.WordNewEvent
 import com.words.cards.presentation.event.WordListEvent
 import com.words.cards.presentation.intent.WordIntent
 import com.words.cards.presentation.reducer.NewWordReducer
@@ -16,10 +16,10 @@ import kotlinx.coroutines.launch
 class NewWordViewModel(
     private val reducer: NewWordReducer,
 ) : ViewModel(),
-    StateViewModel<WordEvent, WordScreenContent, WordIntent>,
-    EventHandle<WordListEvent> {
+    StateViewModel<WordNewEvent, WordScreenContent, WordIntent>,
+    EventHandle<WordNewEvent> {
 
-    override val state: StateFlow<State<WordScreenContent, WordEvent>> = reducer.state
+    override val state: StateFlow<State<WordScreenContent, WordNewEvent>> = reducer.state
 
     override fun onIntent(intent: WordIntent) {
         viewModelScope.launch {
@@ -27,9 +27,9 @@ class NewWordViewModel(
         }
     }
 
-    override fun onEventHandled(event: WordListEvent) {
+    override fun onEventHandled(event: WordNewEvent) {
         viewModelScope.launch {
-            reducer.updateEvent(WordEvent.Empty)
+            reducer.updateEvent(WordNewEvent.Empty)
         }
     }
 }

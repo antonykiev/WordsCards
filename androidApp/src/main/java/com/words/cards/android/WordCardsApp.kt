@@ -2,9 +2,8 @@ package com.words.cards.android
 
 import android.app.Application
 import com.words.cards.android.login.loginAndroidModule
-import com.words.cards.android.main.mainModule
 import com.words.cards.android.splash.splashModule
-import com.words.cards.android.word.newWordModule
+import com.words.cards.android.word_new.newWordModule
 import com.words.cards.android.wordlist.wordsListModule
 import com.words.cards.di.sharedDomainModule
 import org.koin.android.ext.koin.androidContext
@@ -19,7 +18,6 @@ class WordCardsApp : Application() {
                         sharedDomainModule +
                         splashModule +
                         loginAndroidModule +
-                        mainModule +
                         wordsListModule +
                         newWordModule
             )

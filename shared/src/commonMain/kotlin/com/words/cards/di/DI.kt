@@ -13,7 +13,6 @@ import com.words.cards.domain.GetTranscriptionUseCase
 import com.words.cards.domain.RemoveQuotesUseCase
 import com.words.cards.domain.repository.WordLocalRepository
 import com.words.cards.presentation.reducer.LoginReducer
-import com.words.cards.presentation.reducer.MainReducer
 import com.words.cards.presentation.reducer.SplashReducer
 import com.words.cards.presentation.reducer.WordListReducer
 import com.words.cards.presentation.reducer.NewWordReducer
@@ -34,14 +33,6 @@ val loginDomainModule = module {
     factory {
         LoginReducer(
 
-        )
-    }
-}
-
-val mainDomainModule = module {
-    factory {
-        MainReducer(
-            resourceProvider = get<ResourceProvider>()
         )
     }
 }
@@ -108,7 +99,6 @@ val repositoryModule = module {
 val sharedDomainModule = buildList {
     add(splashDomainModule)
     add(loginDomainModule)
-    add(mainDomainModule)
     add(wordListDomainModule)
     add(wordDomainModule)
     add(dataSourceModule)

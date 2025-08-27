@@ -1,11 +1,10 @@
 package com.words.cards.presentation.reducer
 
 import com.words.cards.data.db.entity.WordEntity
-import com.words.cards.data.repository.WordLocalRepositoryImpl
 import com.words.cards.data.repository.WordRemoteRepository
 import com.words.cards.domain.GetTranscriptionUseCase
 import com.words.cards.domain.repository.WordLocalRepository
-import com.words.cards.presentation.event.WordEvent
+import com.words.cards.presentation.event.WordNewEvent
 import com.words.cards.presentation.intent.WordIntent
 import com.words.cards.presentation.state.State
 import com.words.cards.presentation.state.WordScreenContent
@@ -15,12 +14,12 @@ class NewWordReducer(
     private val getTranscriptionUseCase: GetTranscriptionUseCase,
     private val wordRemoteRepository: WordRemoteRepository,
     private val wordLocalRepository: WordLocalRepository,
-) : Reducer<WordEvent, WordScreenContent, WordIntent> {
-    override val mutableState: MutableStateFlow<State<WordScreenContent, WordEvent>> =
+) : Reducer<WordNewEvent, WordScreenContent, WordIntent> {
+    override val mutableState: MutableStateFlow<State<WordScreenContent, WordNewEvent>> =
         MutableStateFlow(
             State(
                 isLoading = true,
-                event = WordEvent.Empty,
+                event = WordNewEvent.Empty,
                 content = WordScreenContent.INITIAL
             )
         )
@@ -66,6 +65,7 @@ class NewWordReducer(
                         createdAt = 1L
                     )
                 )
+                updateEvent(WordNewEvent.Saved)
             }
         }
     }
