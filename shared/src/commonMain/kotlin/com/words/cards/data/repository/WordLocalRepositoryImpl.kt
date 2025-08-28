@@ -13,8 +13,11 @@ class WordLocalRepositoryImpl(
         return dataSource.getAllWords()
     }
 
-    override suspend fun getWordById(id: Long): Result<WordEntity?> {
+    override suspend fun getWordById(id: Long): Result<WordEntity> {
         return dataSource.getWordById(id)
+            .mapCatching {
+                it ?: throw IllegalArgumentException("Word not found")
+            }
     }
 
     override suspend fun insertWord(wordEntity: WordEntity): Result<Long> {

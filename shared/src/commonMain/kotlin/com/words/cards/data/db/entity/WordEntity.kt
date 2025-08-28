@@ -13,5 +13,6 @@ data class WordEntity(
     @ColumnInfo(name = "word_description") val wordDescription: String,
     @ColumnInfo(name = "word_translation") val wordTranslation: String,
     @ColumnInfo(name = "word_transcription") val wordTranscription: String,
+    @ColumnInfo(name = "word_examples") val wordExamples: String,
     @ColumnInfo(name = "created_at") val createdAt: Long,
 )

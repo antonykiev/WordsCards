@@ -17,7 +17,6 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
-import com.words.cards.android.MyApplicationTheme
 import com.words.cards.android.design.CardButton
 import com.words.cards.android.design.CardInput
 import com.words.cards.android.design.Logo
@@ -29,7 +28,7 @@ import org.koin.androidx.compose.koinViewModel
 @Composable
 fun LoginScreen(
     modifier: Modifier = Modifier,
-    onLoginSuccessfully: () -> Unit
+    onLoginSuccessfully: () -> Unit,
 ) {
     val viewModel = koinViewModel<LoginViewModel>()
     val state = viewModel.state.collectAsStateWithLifecycle().value
@@ -61,7 +60,7 @@ fun LoginPane(
     content: LoginScreenContent,
     onEmailChange: (String) -> Unit,
     onPasswordChange: (String) -> Unit,
-    onLoginClick: () -> Unit
+    onLoginClick: () -> Unit,
 ) {
     Box(
         modifier = modifier
@@ -108,22 +107,20 @@ fun LoginPane(
 @Preview
 @Composable
 private fun LoginPanePreview() {
-    MyApplicationTheme {
-        LoginPane(
-            content = LoginScreenContent(
-                title = "Welcome to Words Cards",
-                description = "In this app you can learn new words combining AI advantages and your effort",
-                loginTint = "Email",
-                loginInputText = "1mail@mail.com",
-                loginInputStatus = InputStatus.Initial,
-                passwordTint = "Password",
-                passwordInputText = "4567",
-                passwordInputStatus = InputStatus.Initial,
-                loginButtonText = "LOGIN",
-            ),
-            onEmailChange = {},
-            onPasswordChange = {},
-            onLoginClick = {},
-        )
-    }
+    LoginPane(
+        content = LoginScreenContent(
+            title = "Welcome to Words Cards",
+            description = "In this app you can learn new words combining AI advantages and your effort",
+            loginTint = "Email",
+            loginInputText = "1mail@mail.com",
+            loginInputStatus = InputStatus.Initial,
+            passwordTint = "Password",
+            passwordInputText = "4567",
+            passwordInputStatus = InputStatus.Initial,
+            loginButtonText = "LOGIN",
+        ),
+        onEmailChange = {},
+        onPasswordChange = {},
+        onLoginClick = {},
+    )
 }

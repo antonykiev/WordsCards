@@ -16,8 +16,8 @@ import com.words.cards.presentation.reducer.LoginReducer
 import com.words.cards.presentation.reducer.SplashReducer
 import com.words.cards.presentation.reducer.WordListReducer
 import com.words.cards.presentation.reducer.NewWordReducer
+import com.words.cards.presentation.reducer.WordReducer
 import com.words.cards.resource.AssetReader
-import com.words.cards.resource.ResourceProvider
 import org.koin.dsl.module
 
 val splashDomainModule = module {
@@ -44,7 +44,7 @@ val wordListDomainModule = module {
         )
     }
 }
-val wordDomainModule = module {
+val newWordDomainModule = module {
     factory {
         NewWordReducer(
             getTranscriptionUseCase = get<GetTranscriptionUseCase>(),
@@ -68,6 +68,14 @@ val wordDomainModule = module {
     factory {
         GetFileJsonUseCase(
             assetReader = get<AssetReader>()
+        )
+    }
+}
+
+val wordDomainModule = module {
+    factory {
+        WordReducer(
+            wordLocalRepository = get<WordLocalRepository>(),
         )
     }
 }
@@ -100,6 +108,7 @@ val sharedDomainModule = buildList {
     add(splashDomainModule)
     add(loginDomainModule)
     add(wordListDomainModule)
+    add(newWordDomainModule)
     add(wordDomainModule)
     add(dataSourceModule)
     add(repositoryModule)

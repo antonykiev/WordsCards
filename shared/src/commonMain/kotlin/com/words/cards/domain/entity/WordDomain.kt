@@ -6,5 +6,6 @@ data class WordDomain(
     val wordDescription: String,
     val wordTranslation: String,
     val wordTranscription: String,
+    val wordExamples: String,
     val createdAt: Long,
 )

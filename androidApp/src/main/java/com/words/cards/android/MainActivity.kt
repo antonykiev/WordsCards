@@ -22,6 +22,7 @@ import androidx.navigation.navArgument
 import com.words.cards.android.login.LoginScreen
 import com.words.cards.android.splash.SplashScreen
 import com.words.cards.android.word_new.NewWordScreen
+import com.words.cards.android.word.WordScreen
 import com.words.cards.android.wordlist.WordListScreen
 
 class MainActivity : ComponentActivity() {
@@ -29,21 +30,19 @@ class MainActivity : ComponentActivity() {
         super.onCreate(savedInstanceState)
         enableEdgeToEdge()
         setContent {
-            MyApplicationTheme {
-                Scaffold (
-                    modifier = Modifier
-                        .fillMaxSize()
-                        .background(color = MaterialTheme.colorScheme.background),
-                ) { paddingValues ->
-                    InitNavigation(paddingValues)
-                }
+            Scaffold(
+                modifier = Modifier
+                    .fillMaxSize()
+                    .background(color = MaterialTheme.colorScheme.background),
+            ) { paddingValues ->
+                InitNavigation(paddingValues)
             }
         }
     }
 
     @Composable
     private fun InitNavigation(
-        paddingValues: PaddingValues
+        paddingValues: PaddingValues,
     ) {
         val navController = rememberNavController()
         val navBackStackEntry by navController.currentBackStackEntryAsState()
@@ -74,6 +73,9 @@ class MainActivity : ComponentActivity() {
                         .padding(paddingValues),
                     onOpenNewWord = { newWordText ->
                         navController.navigate("new_word/$newWordText")
+                    },
+                    onOpenWord = { word ->
+                        navController.navigate("word/$word")
                     }
                 )
             }
@@ -87,6 +89,21 @@ class MainActivity : ComponentActivity() {
                     modifier = Modifier
                         .padding(paddingValues),
                     newWord = newWordText,
+                    onBack = {
+                        navController.popBackStack()
+                    }
+                )
+            }
+            composable(
+                route = "word/{wordId}",
+                arguments = listOf(navArgument("wordId") { type = NavType.LongType })
+            ) { backStackEntry ->
+                val wordId = backStackEntry.arguments?.getLong("wordId")
+                    ?: throw IllegalArgumentException("newWordText must be provided")
+                WordScreen(
+                    modifier = Modifier
+                        .padding(paddingValues),
+                    wordId = wordId,
                     onBack = {
                         navController.popBackStack()
                     }

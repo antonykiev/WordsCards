@@ -4,29 +4,29 @@ import com.words.cards.data.db.entity.WordEntity
 import com.words.cards.data.repository.WordRemoteRepository
 import com.words.cards.domain.GetTranscriptionUseCase
 import com.words.cards.domain.repository.WordLocalRepository
-import com.words.cards.presentation.event.WordNewEvent
-import com.words.cards.presentation.intent.WordIntent
+import com.words.cards.presentation.event.NewWordEvent
+import com.words.cards.presentation.intent.NewWordIntent
 import com.words.cards.presentation.state.State
-import com.words.cards.presentation.state.WordScreenContent
+import com.words.cards.presentation.state.NewWordScreenContent
 import kotlinx.coroutines.flow.MutableStateFlow
 
 class NewWordReducer(
     private val getTranscriptionUseCase: GetTranscriptionUseCase,
     private val wordRemoteRepository: WordRemoteRepository,
     private val wordLocalRepository: WordLocalRepository,
-) : Reducer<WordNewEvent, WordScreenContent, WordIntent> {
-    override val mutableState: MutableStateFlow<State<WordScreenContent, WordNewEvent>> =
+) : Reducer<NewWordEvent, NewWordScreenContent, NewWordIntent> {
+    override val mutableState: MutableStateFlow<State<NewWordScreenContent, NewWordEvent>> =
         MutableStateFlow(
             State(
                 isLoading = true,
-                event = WordNewEvent.Empty,
-                content = WordScreenContent.INITIAL
+                event = NewWordEvent.Empty,
+                content = NewWordScreenContent.INITIAL
             )
         )
 
-    override suspend fun processIntent(intent: WordIntent) {
+    override suspend fun processIntent(intent: NewWordIntent) {
         when (intent) {
-            is WordIntent.InitialLoad -> {
+            is NewWordIntent.InitialLoad -> {
                 updateContent {
                     val transcription = getTranscriptionUseCase.invoke(intent.word)
                         .getOrElse { "Transcription not available" }
@@ -54,18 +54,19 @@ class NewWordReducer(
                 }
             }
 
-            WordIntent.OnSaveClicked -> {
-                val wordInfo: WordScreenContent = mutableState.value.content
+            NewWordIntent.OnSaveClicked -> {
+                val wordInfo: NewWordScreenContent = mutableState.value.content
                 wordLocalRepository.insertWord(
                     WordEntity(
                         wordText = wordInfo.word,
                         wordDescription = wordInfo.description,
                         wordTranslation = wordInfo.translation,
                         wordTranscription = wordInfo.transcription,
+                        wordExamples = wordInfo.exampleList,
                         createdAt = 1L
                     )
                 )
-                updateEvent(WordNewEvent.Saved)
+                updateEvent(NewWordEvent.Saved)
             }
         }
     }

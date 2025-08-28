@@ -19,19 +19,18 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
-import com.words.cards.android.MyApplicationTheme
 import com.words.cards.android.design.CardButton
-import com.words.cards.presentation.event.WordNewEvent
-import com.words.cards.presentation.intent.WordIntent
+import com.words.cards.presentation.event.NewWordEvent
+import com.words.cards.presentation.intent.NewWordIntent
 import com.words.cards.presentation.state.LoadableContent
-import com.words.cards.presentation.state.WordScreenContent
+import com.words.cards.presentation.state.NewWordScreenContent
 import org.koin.androidx.compose.koinViewModel
 
 @Composable
 fun NewWordScreen(
     modifier: Modifier = Modifier,
     newWord: String,
-    onBack: () -> Unit
+    onBack: () -> Unit,
 ) {
     BackHandler(onBack = onBack)
 
@@ -39,24 +38,24 @@ fun NewWordScreen(
     val state by viewModel.state.collectAsStateWithLifecycle()
 
     LaunchedEffect(Unit) {
-        viewModel.onIntent(WordIntent.InitialLoad(newWord))
+        viewModel.onIntent(NewWordIntent.InitialLoad(newWord))
     }
 
     LaunchedEffect(state.event) {
-        when (val event: WordNewEvent = state.event) {
-            WordNewEvent.Empty -> {}
-            WordNewEvent.Saved -> {
+        when (val event: NewWordEvent = state.event) {
+            NewWordEvent.Empty -> {}
+            NewWordEvent.Saved -> {
                 onBack()
             }
         }
-            viewModel.onEventHandled(state.event)
+        viewModel.onEventHandled(state.event)
     }
 
     NewWordPane(
         modifier = modifier.fillMaxSize(),
         content = state.content,
         onSaveClicked = {
-            viewModel.onIntent(WordIntent.OnSaveClicked)
+            viewModel.onIntent(NewWordIntent.OnSaveClicked)
         }
     )
 }
@@ -64,8 +63,8 @@ fun NewWordScreen(
 @Composable
 fun NewWordPane(
     modifier: Modifier = Modifier,
-    content: WordScreenContent,
-    onSaveClicked: () -> Unit
+    content: NewWordScreenContent,
+    onSaveClicked: () -> Unit,
 ) {
 
     Box(
@@ -127,18 +126,16 @@ fun NewWordPane(
 @Preview
 @Composable
 private fun NewWordPanePreview() {
-    MyApplicationTheme {
-        NewWordPane(
-            modifier = Modifier,
-            content = WordScreenContent(
-                word = "flabbergasted",
-                transcription = "ˈflæbərˌɡæstɪd",
-                exampleList = "I was flabbergasted by the news of winning the lottery.",
-                translation = "ошеломленный",
-                image = LoadableContent.Loading,
-                description = "flabbergasted means to be extremely surprised or shocked."
-            ),
-            onSaveClicked = {}
-        )
-    }
+    NewWordPane(
+        modifier = Modifier,
+        content = NewWordScreenContent(
+            word = "flabbergasted",
+            transcription = "ˈflæbərˌɡæstɪd",
+            exampleList = "I was flabbergasted by the news of winning the lottery.",
+            translation = "ошеломленный",
+            image = LoadableContent.Loading,
+            description = "flabbergasted means to be extremely surprised or shocked."
+        ),
+        onSaveClicked = {}
+    )
 }

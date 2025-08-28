@@ -7,19 +7,26 @@ import androidx.compose.animation.fadeOut
 import androidx.compose.animation.slideInHorizontally
 import androidx.compose.animation.slideOutHorizontally
 import androidx.compose.foundation.background
+import androidx.compose.foundation.clickable
+import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.itemsIndexed
+import androidx.compose.foundation.shape.CircleShape
+import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.text.KeyboardActions
 import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Add
+import androidx.compose.material.icons.filled.Menu
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
 import androidx.compose.material3.MaterialTheme
@@ -32,9 +39,12 @@ import androidx.compose.runtime.getValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.text.TextStyle
+import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.input.ImeAction
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
+import androidx.compose.ui.unit.sp
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import com.words.cards.presentation.event.WordListEvent
 import com.words.cards.presentation.intent.WordListIntent
@@ -46,6 +56,7 @@ import org.koin.androidx.compose.koinViewModel
 fun WordListScreen(
     modifier: Modifier = Modifier,
     onOpenNewWord: (word: String) -> Unit,
+    onOpenWord: (wordId: Long) -> Unit,
 ) {
     val viewModel = koinViewModel<WordListViewModel>()
     val state by viewModel.state.collectAsStateWithLifecycle()
@@ -57,12 +68,15 @@ fun WordListScreen(
     LaunchedEffect(state.event) {
         when (val event = state.event) {
             WordListEvent.Empty -> {}
-            is WordListEvent.OpenWord -> {}
+            is WordListEvent.OpenWord -> {
+                onOpenWord(event.wordId)
+            }
+
             is WordListEvent.OpenNewWord -> {
                 onOpenNewWord(event.word)
-                viewModel.onEventHandled(event)
             }
         }
+        viewModel.onEventHandled(state.event)
     }
 
     WordListPane(
@@ -95,13 +109,42 @@ fun WordListPane(
         modifier = modifier
             .background(color = MaterialTheme.colorScheme.background),
     ) {
-        SearchView(
-            modifier = Modifier,
-            value = text,
-            onValueChange = onValueChange,
-            onPlusClicked = onPlusClicked,
-        )
-        LazyColumn {
+        Row(
+            modifier = Modifier
+                .padding(horizontal = 6.dp),
+            verticalAlignment = Alignment.CenterVertically
+        ) {
+            IconButton(
+                onClick = {
+
+                },
+                modifier = Modifier
+                    .background(
+                        color = Color(0xFF1A4EEC),
+                        shape = CircleShape
+                    )
+            ) {
+                Icon(
+                    imageVector = Icons.Default.Menu,
+                    contentDescription = "Menu",
+                    tint = Color.White
+                )
+            }
+
+            Spacer(Modifier.width(6.dp))
+
+            SearchView(
+                modifier = Modifier,
+                value = text,
+                onValueChange = onValueChange,
+                onPlusClicked = onPlusClicked,
+            )
+        }
+
+        LazyColumn(
+            verticalArrangement = Arrangement.spacedBy(8.dp),
+            contentPadding = PaddingValues(8.dp),
+        ) {
             itemsIndexed(
                 items = content.wordsItems,
                 key = { index, item -> item.id }
@@ -122,7 +165,7 @@ fun SearchView(
     value: String,
     onValueChange: (String) -> Unit = {},
     onPlusClicked: (newWord: String) -> Unit = {},
-    placeholder: String = "Type something...",
+    placeholder: String = "New word",
     keyboardOptions: KeyboardOptions = KeyboardOptions.Default.copy(
         imeAction = ImeAction.Done
     ),
@@ -131,17 +174,30 @@ fun SearchView(
     maxLines: Int = if (singleLine) 1 else Int.MAX_VALUE,
 ) {
     Box(
-        modifier = modifier.fillMaxWidth(),
+        modifier = modifier
+            .fillMaxWidth(),
         contentAlignment = Alignment.CenterEnd
     ) {
         TextField(
             value = value,
+            shape = RoundedCornerShape(28.dp),
             onValueChange = onValueChange,
             modifier = Modifier.fillMaxWidth(),
-            placeholder = placeholder.let { { Text(it) } },
+            placeholder = {
+                Text(
+                    text = placeholder,
+                    color = Color.White
+                )
+            },
             colors = TextFieldDefaults.colors(
-                unfocusedContainerColor = Color.Transparent,
-                focusedContainerColor = Color.Transparent,
+                focusedContainerColor = Color(0xFF1A4EEC), // Background color when focused
+                unfocusedContainerColor = Color(0xFF1A4EEC), // Background color when not focused
+                disabledContainerColor = Color(0xFF1A4EEC), // Background color when disabled
+                focusedIndicatorColor = Color.Transparent,
+                unfocusedIndicatorColor = Color.Transparent,
+                disabledIndicatorColor = Color.Transparent,
+                focusedTextColor = Color.White,
+                unfocusedTextColor = Color.White.copy(alpha = 0.8f),
             ),
             keyboardOptions = keyboardOptions,
             keyboardActions = keyboardActions,
@@ -158,23 +214,24 @@ fun SearchView(
         )
 
         AnimatedVisibility(
+            modifier = Modifier
+                .padding(end = 8.dp),
             visible = value.isNotEmpty(),
             enter = fadeIn(animationSpec = tween(durationMillis = 150)) +
                     slideInHorizontally(animationSpec = tween(durationMillis = 200)) { it / 2 },
             exit = fadeOut(animationSpec = tween(durationMillis = 150)) +
                     slideOutHorizontally(animationSpec = tween(durationMillis = 200)) { it / 2 },
-            modifier = Modifier.padding(end = 8.dp)
         ) {
             IconButton(
+                modifier = Modifier.padding(start = 8.dp),
                 onClick = {
                     onPlusClicked(value)
                 },
-                modifier = Modifier.padding(start = 8.dp)
             ) {
                 Icon(
                     imageVector = Icons.Default.Add,
                     contentDescription = "Add",
-                    tint = Color.Black
+                    tint = Color.White
                 )
             }
         }
@@ -190,13 +247,38 @@ fun WordItem(
     Column(
         modifier = modifier
             .fillMaxWidth()
-            .padding(vertical = 8.dp)
+            .background(
+                color = Color(0xFF1A4EEC).copy(alpha = 0.1F),
+                shape = RoundedCornerShape(16.dp)
+            )
+            .padding(
+                horizontal = 8.dp,
+                vertical = 16.dp
+            )
+            .clickable {
+                onWordClicked(item.id)
+            }
     ) {
         Row {
-            Text(item.word)
+            Text(
+                item.word,
+                style = TextStyle(
+                    fontSize = 18.sp,
+                    fontWeight = FontWeight.Bold,
+                    color = Color.Black
+                )
+            )
             Spacer(Modifier.width(8.dp))
-            Text(item.transcription)
+            Text(
+                item.transcription,
+                style = TextStyle(
+                    fontSize = 18.sp,
+                    fontWeight = FontWeight.Light,
+                    color = Color.Gray
+                )
+            )
         }
+        Spacer(Modifier.height(8.dp))
         Text(item.description)
     }
 
@@ -220,21 +302,21 @@ private fun WordListPanePreview() {
                 WordItem(
                     word = "flabbergasted",
                     translation = "ошеломленный",
-                    transcription = "flæbərɡæstɪd",
+                    transcription = "[flæbərɡæstɪd]",
                     description = "very surprised",
                     id = 1
                 ),
                 WordItem(
                     word = "flabbergasted",
                     translation = "ошеломленный",
-                    transcription = "flæbərɡæstɪd",
+                    transcription = "[flæbərɡæstɪd]",
                     description = "very surprised",
                     id = 2
                 ),
                 WordItem(
                     word = "flabbergasted",
                     translation = "ошеломленный",
-                    transcription = "flæbərɡæstɪd",
+                    transcription = "[flæbərɡæstɪd]",
                     description = "very surprised",
                     id = 3
                 )

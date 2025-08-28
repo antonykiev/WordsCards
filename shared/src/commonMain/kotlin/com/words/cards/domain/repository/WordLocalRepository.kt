@@ -6,7 +6,7 @@ import kotlinx.coroutines.flow.Flow
 
 interface WordLocalRepository {
     fun allWordsFlow(): Flow<List<WordEntity>>
-    suspend fun getWordById(id: Long): Result<WordEntity?>
+    suspend fun getWordById(id: Long): Result<WordEntity>
     suspend fun insertWord(wordEntity: WordEntity): Result<Long>
     suspend fun updateWord(word: WordEntity): Result<Int>
     suspend fun deleteWord(word: WordEntity): Result<Int>
@@ -19,6 +19,7 @@ interface WordLocalRepository {
                 wordDescription = wordDomain.wordDescription,
                 wordTranslation = wordDomain.wordTranslation,
                 wordTranscription = wordDomain.wordTranscription,
+                wordExamples = wordDomain.wordExamples,
                 createdAt = wordDomain.createdAt
             )
         }
@@ -30,6 +31,7 @@ interface WordLocalRepository {
                 wordDescription = wordEntity.wordDescription,
                 wordTranslation = wordEntity.wordTranslation,
                 wordTranscription = wordEntity.wordTranscription,
+                wordExamples = wordEntity.wordExamples,
                 createdAt = wordEntity.createdAt
             )
         }
