@@ -8,6 +8,7 @@ import com.words.cards.data.repository.WordLocalRepositoryImpl
 import com.words.cards.data.repository.WordRemoteRepository
 import com.words.cards.domain.ArpabetToIpaUseCase
 import com.words.cards.domain.CheckUserIsLoginUseCase
+import com.words.cards.domain.CurrentDateUseCase
 import com.words.cards.domain.GetFileJsonUseCase
 import com.words.cards.domain.GetTranscriptionUseCase
 import com.words.cards.domain.RemoveQuotesUseCase
@@ -50,6 +51,7 @@ val newWordDomainModule = module {
             getTranscriptionUseCase = get<GetTranscriptionUseCase>(),
             wordRemoteRepository = get<WordRemoteRepository>(),
             wordLocalRepository = get<WordLocalRepository>(),
+            currentDateUseCase = get<CurrentDateUseCase>(),
         )
     }
     factory {
@@ -69,6 +71,9 @@ val newWordDomainModule = module {
         GetFileJsonUseCase(
             assetReader = get<AssetReader>()
         )
+    }
+    factory {
+        CurrentDateUseCase()
     }
 }
 

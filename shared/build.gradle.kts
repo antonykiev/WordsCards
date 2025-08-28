@@ -46,6 +46,8 @@ kotlin {
             implementation(libs.ktor.client.logging)
             // SERIALIZATION
             implementation(libs.kotlinx.serialization.json)
+            // DATE AND TIME
+            implementation(libs.kotlinx.datetime)
         }
         commonTest.dependencies {
             implementation(libs.kotlin.test)

@@ -2,6 +2,7 @@ package com.words.cards.presentation.reducer
 
 import com.words.cards.data.db.entity.WordEntity
 import com.words.cards.data.repository.WordRemoteRepository
+import com.words.cards.domain.CurrentDateUseCase
 import com.words.cards.domain.GetTranscriptionUseCase
 import com.words.cards.domain.repository.WordLocalRepository
 import com.words.cards.presentation.event.NewWordEvent
@@ -14,6 +15,7 @@ class NewWordReducer(
     private val getTranscriptionUseCase: GetTranscriptionUseCase,
     private val wordRemoteRepository: WordRemoteRepository,
     private val wordLocalRepository: WordLocalRepository,
+    private val currentDateUseCase: CurrentDateUseCase,
 ) : Reducer<NewWordEvent, NewWordScreenContent, NewWordIntent> {
     override val mutableState: MutableStateFlow<State<NewWordScreenContent, NewWordEvent>> =
         MutableStateFlow(
@@ -63,7 +65,7 @@ class NewWordReducer(
                         wordTranslation = wordInfo.translation,
                         wordTranscription = wordInfo.transcription,
                         wordExamples = wordInfo.exampleList,
-                        createdAt = 1L
+                        createdAt = currentDateUseCase.inSeconds()
                     )
                 )
                 updateEvent(NewWordEvent.Saved)
