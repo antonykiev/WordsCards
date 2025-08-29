@@ -14,7 +14,6 @@ kotlinxCoroutinesCore = "1.8.1"
 koinVersion = "3.4.1"
 navigationCompose = "2.8.3"
 core = "1.16.0"
-roomRuntime = "2.7.2"
 ksp = "2.0.20-1.0.24"
 sqlite = "2.5.0-SNAPSHOT"
 androidx-room = "2.7.0-alpha01"
@@ -31,7 +30,6 @@ androidx-activity-compose = { module = "androidx.activity:activity-compose", ver
 compose-ui = { module = "androidx.compose.ui:ui", version.ref = "compose" }
 compose-ui-tooling = { module = "androidx.compose.ui:ui-tooling", version.ref = "compose" }
 compose-ui-tooling-preview = { module = "androidx.compose.ui:ui-tooling-preview", version.ref = "compose" }
-compose-foundation = { module = "androidx.compose.foundation:foundation", version.ref = "compose" }
 compose-material3 = { module = "androidx.compose.material3:material3", version.ref = "compose-material3" }
 kotlinx-coroutines-core = { module = "org.jetbrains.kotlinx:kotlinx-coroutines-core", version.ref = "kotlinxCoroutinesCore" }
 koin-android = { module = "io.insert-koin:koin-android", version.ref = "koinVersion" }

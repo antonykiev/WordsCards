@@ -14,6 +14,7 @@ import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
+import androidx.compose.foundation.layout.fillMaxHeight
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
@@ -27,23 +28,35 @@ import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Add
 import androidx.compose.material.icons.filled.Menu
+import androidx.compose.material3.DrawerValue
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
 import androidx.compose.material3.MaterialTheme
+import androidx.compose.material3.ModalDrawerSheet
+import androidx.compose.material3.ModalNavigationDrawer
+import androidx.compose.material3.NavigationDrawerItem
+import androidx.compose.material3.NavigationDrawerItemDefaults
 import androidx.compose.material3.Text
 import androidx.compose.material3.TextField
 import androidx.compose.material3.TextFieldDefaults
+import androidx.compose.material3.rememberDrawerState
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
+import androidx.compose.runtime.setValue
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
+import androidx.compose.runtime.rememberCoroutineScope
+import androidx.compose.runtime.snapshotFlow
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.res.colorResource
 import androidx.compose.ui.text.TextStyle
-import androidx.compose.ui.text.font.FontStyle
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.input.ImeAction
+import androidx.compose.ui.text.input.TextFieldValue
+import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
@@ -53,6 +66,9 @@ import com.words.cards.presentation.event.WordListEvent
 import com.words.cards.presentation.intent.WordListIntent
 import com.words.cards.presentation.state.WordItem
 import com.words.cards.presentation.state.WordListScreenContent
+import kotlinx.coroutines.FlowPreview
+import kotlinx.coroutines.flow.debounce
+import kotlinx.coroutines.launch
 import org.koin.androidx.compose.koinViewModel
 
 @Composable
@@ -82,7 +98,7 @@ fun WordListScreen(
         viewModel.onEventHandled(state.event)
     }
 
-    WordListPane(
+    WordListPaneWithDrawer(
         modifier = modifier,
         content = state.content,
         text = state.content.searchWord,
@@ -99,10 +115,49 @@ fun WordListScreen(
 }
 
 @Composable
+fun WordListPaneWithDrawer(
+    modifier: Modifier = Modifier,
+    content: WordListScreenContent,
+    text: String,
+    onValueChange: (String) -> Unit,
+    onPlusClicked: (word: String) -> Unit,
+    onWordClicked: (wordId: Long) -> Unit,
+) {
+    val drawerState = rememberDrawerState(DrawerValue.Closed)
+    val scope = rememberCoroutineScope()
+
+    ModalNavigationDrawer(
+        drawerState = drawerState,
+        drawerContent = {
+            ModalDrawerSheet {
+                DrawerMenu(
+                    onItemSelected = {
+                        scope.launch { drawerState.close() }
+                    },
+                )
+            }
+        }
+    ) {
+
+        WordListPane(
+            modifier = modifier,
+            content = content,
+            text = text,
+            onBurgerClicked = { scope.launch { drawerState.open() } },
+            onValueChange = onValueChange,
+            onPlusClicked = onPlusClicked,
+            onWordClicked = onWordClicked
+        )
+    }
+}
+
+
+@Composable
 fun WordListPane(
     modifier: Modifier = Modifier,
     content: WordListScreenContent,
     text: String,
+    onBurgerClicked: () -> Unit,
     onValueChange: (String) -> Unit,
     onPlusClicked: (word: String) -> Unit,
     onWordClicked: (wordId: Long) -> Unit,
@@ -119,9 +174,7 @@ fun WordListPane(
             verticalAlignment = Alignment.CenterVertically
         ) {
             IconButton(
-                onClick = {
-
-                },
+                onClick = onBurgerClicked,
                 modifier = Modifier
                     .background(
                         color = colorResource(R.color.brand_color),
@@ -137,7 +190,7 @@ fun WordListPane(
             Spacer(Modifier.width(6.dp))
             SearchView(
                 modifier = Modifier,
-                value = text,
+                text = text,
                 onValueChange = onValueChange,
                 onPlusClicked = onPlusClicked,
             )
@@ -160,13 +213,14 @@ fun WordListPane(
     }
 }
 
+@OptIn(FlowPreview::class)
 @Composable
 fun SearchView(
     modifier: Modifier = Modifier,
-    value: String,
+    text: String,
+    placeholder: String = "New word",
     onValueChange: (String) -> Unit = {},
     onPlusClicked: (newWord: String) -> Unit = {},
-    placeholder: String = "New word",
     keyboardOptions: KeyboardOptions = KeyboardOptions.Default.copy(
         imeAction = ImeAction.Done
     ),
@@ -174,19 +228,31 @@ fun SearchView(
     singleLine: Boolean = true,
     maxLines: Int = if (singleLine) 1 else Int.MAX_VALUE,
 ) {
+    var textFieldValue by remember { mutableStateOf(text) }
+
+    LaunchedEffect(textFieldValue) {
+        snapshotFlow { textFieldValue }
+            .debounce(300L)
+            .collect { debouncedText ->
+                onValueChange(debouncedText)
+            }
+    }
+
     Box(
         modifier = modifier
             .fillMaxWidth(),
         contentAlignment = Alignment.CenterEnd
     ) {
         TextField(
-            value = value,
+            value = textFieldValue,
             textStyle = TextStyle(
                 fontSize = 18.sp,
                 fontWeight = FontWeight.Bold,
             ),
             shape = RoundedCornerShape(28.dp),
-            onValueChange = onValueChange,
+            onValueChange = { newValue ->
+                textFieldValue = newValue
+            },
             modifier = Modifier.fillMaxWidth(),
             placeholder = {
                 Text(
@@ -225,7 +291,7 @@ fun SearchView(
         AnimatedVisibility(
             modifier = Modifier
                 .padding(end = 8.dp),
-            visible = value.isNotEmpty(),
+            visible = text.isNotEmpty(),
             enter = fadeIn(animationSpec = tween(durationMillis = 150)) +
                     slideInHorizontally(animationSpec = tween(durationMillis = 200)) { it / 2 },
             exit = fadeOut(animationSpec = tween(durationMillis = 150)) +
@@ -234,7 +300,7 @@ fun SearchView(
             IconButton(
                 modifier = Modifier.padding(start = 8.dp),
                 onClick = {
-                    onPlusClicked(value)
+                    onPlusClicked(text)
                 },
             ) {
                 Icon(
@@ -290,6 +356,83 @@ fun WordItem(
         Spacer(Modifier.height(8.dp))
         Text(item.description)
     }
+}
+
+@Composable
+fun DrawerMenu(
+    modifier: Modifier = Modifier,
+    onItemSelected: () -> Unit,
+) {
+    Column(
+        modifier = modifier
+            .fillMaxHeight()
+            .background(
+                color = colorResource(R.color.background)
+            )
+            .padding(16.dp)
+    ) {
+        Text(
+            modifier = Modifier
+                .fillMaxWidth()
+                .padding(vertical = 16.dp),
+            text = "Word Cards",
+            textAlign = TextAlign.Center,
+            style = TextStyle(
+                fontSize = 20.sp,
+                fontWeight = FontWeight.Bold,
+                color = Color.Black
+            )
+        )
+        NavigationDrawerCardItem(
+            text = "Synchronize",
+            onItemSelected = onItemSelected
+        )
+        NavigationDrawerCardItem(
+            text = "Card settings",
+            onItemSelected = onItemSelected
+        )
+        NavigationDrawerCardItem(
+            text = "Change languages",
+            onItemSelected = onItemSelected
+        )
+        NavigationDrawerCardItem(
+            text = "Create folder",
+            onItemSelected = onItemSelected
+        )
+        NavigationDrawerCardItem(
+            text = "Theme settings",
+            onItemSelected = onItemSelected
+        )
+        NavigationDrawerCardItem(
+            text = "About this app",
+            onItemSelected = onItemSelected
+        )
+    }
+}
+
+@Composable
+fun NavigationDrawerCardItem(
+    text: String,
+    onItemSelected: () -> Unit
+) {
+    NavigationDrawerItem(
+        label = {
+            Text(
+                text = text,
+                style = TextStyle(
+                    fontSize = 18.sp,
+                    fontWeight = FontWeight.Light,
+                    color = Color.Gray
+                )
+            )
+        },
+        selected = false,
+        onClick = onItemSelected,
+        colors = NavigationDrawerItemDefaults.colors(
+            selectedContainerColor = Color.Transparent,
+            unselectedContainerColor = Color.Transparent
+        )
+    )
 
 }
 
@@ -297,7 +440,7 @@ fun WordItem(
 @Composable
 private fun SearchViewPreview() {
     SearchView(
-        value = ""
+        text = ""
     )
 }
 
@@ -332,8 +475,17 @@ private fun WordListPanePreview() {
             )
         ),
         text = "",
+        onBurgerClicked = { },
         onValueChange = { },
         onPlusClicked = { },
         onWordClicked = { }
+    )
+}
+
+@Preview
+@Composable
+private fun DrawerMenuPreview() {
+    DrawerMenu(
+        onItemSelected = { },
     )
 }

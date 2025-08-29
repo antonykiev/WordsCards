@@ -54,7 +54,7 @@ dependencies {
     implementation(libs.ktor.client.android)
 
     implementation(libs.room.runtime)
-            compileOnly(libs.room.common)
-            implementation(libs.androidx.room.ktx)
+    compileOnly(libs.room.common)
+    implementation(libs.androidx.room.ktx)
 
 }
