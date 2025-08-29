@@ -54,7 +54,7 @@ class MainActivity : ComponentActivity() {
             composable(route = "splash") {
                 SplashScreen(
                     onSuccessfullyLoaded = {
-                        navController.navigate("login")
+                        navController.navigate("word_list")
                     }
                 )
             }
@@ -87,7 +87,11 @@ class MainActivity : ComponentActivity() {
                     ?: throw IllegalArgumentException("newWordText must be provided")
                 NewWordScreen(
                     modifier = Modifier
-                        .padding(paddingValues),
+                        .fillMaxSize()
+                        .padding(
+                            bottom = paddingValues.calculateBottomPadding(),
+                            top = paddingValues.calculateTopPadding(),
+                        ),
                     newWord = newWordText,
                     onBack = {
                         navController.popBackStack()

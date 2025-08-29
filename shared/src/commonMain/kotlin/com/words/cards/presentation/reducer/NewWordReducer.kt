@@ -38,10 +38,9 @@ class NewWordReducer(
                         }
                         .getOrNull()
 
-                    println("NewWordReducer wordInfo $wordInfo")
-
                     it.copy(
                         word = intent.word,
+                        isLoading = false,
                         description = wordInfo?.description.orEmpty(),
                         transcription = transcription,
                         translation = wordInfo?.translation.orEmpty(),

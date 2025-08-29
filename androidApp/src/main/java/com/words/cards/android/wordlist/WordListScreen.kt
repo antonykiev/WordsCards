@@ -39,13 +39,16 @@ import androidx.compose.runtime.getValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.res.colorResource
 import androidx.compose.ui.text.TextStyle
+import androidx.compose.ui.text.font.FontStyle
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.input.ImeAction
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
+import com.words.cards.android.R
 import com.words.cards.presentation.event.WordListEvent
 import com.words.cards.presentation.intent.WordListIntent
 import com.words.cards.presentation.state.WordItem
@@ -111,6 +114,7 @@ fun WordListPane(
     ) {
         Row(
             modifier = Modifier
+                .padding(top = 6.dp)
                 .padding(horizontal = 6.dp),
             verticalAlignment = Alignment.CenterVertically
         ) {
@@ -120,7 +124,7 @@ fun WordListPane(
                 },
                 modifier = Modifier
                     .background(
-                        color = Color(0xFF1A4EEC),
+                        color = colorResource(R.color.brand_color),
                         shape = CircleShape
                     )
             ) {
@@ -130,9 +134,7 @@ fun WordListPane(
                     tint = Color.White
                 )
             }
-
             Spacer(Modifier.width(6.dp))
-
             SearchView(
                 modifier = Modifier,
                 value = text,
@@ -140,7 +142,6 @@ fun WordListPane(
                 onPlusClicked = onPlusClicked,
             )
         }
-
         LazyColumn(
             verticalArrangement = Arrangement.spacedBy(8.dp),
             contentPadding = PaddingValues(8.dp),
@@ -180,19 +181,27 @@ fun SearchView(
     ) {
         TextField(
             value = value,
+            textStyle = TextStyle(
+                fontSize = 18.sp,
+                fontWeight = FontWeight.Bold,
+            ),
             shape = RoundedCornerShape(28.dp),
             onValueChange = onValueChange,
             modifier = Modifier.fillMaxWidth(),
             placeholder = {
                 Text(
                     text = placeholder,
-                    color = Color.White
+                    color = Color.White,
+                    style = TextStyle(
+                        fontSize = 18.sp,
+                        fontWeight = FontWeight.Bold,
+                    )
                 )
             },
             colors = TextFieldDefaults.colors(
-                focusedContainerColor = Color(0xFF1A4EEC), // Background color when focused
-                unfocusedContainerColor = Color(0xFF1A4EEC), // Background color when not focused
-                disabledContainerColor = Color(0xFF1A4EEC), // Background color when disabled
+                focusedContainerColor = colorResource(R.color.brand_color),
+                unfocusedContainerColor = colorResource(R.color.brand_color),
+                disabledContainerColor = colorResource(R.color.brand_color),
                 focusedIndicatorColor = Color.Transparent,
                 unfocusedIndicatorColor = Color.Transparent,
                 disabledIndicatorColor = Color.Transparent,
@@ -248,7 +257,7 @@ fun WordItem(
         modifier = modifier
             .fillMaxWidth()
             .background(
-                color = Color(0xFF1A4EEC).copy(alpha = 0.1F),
+                color = colorResource(R.color.brand_color).copy(alpha = 0.1F),
                 shape = RoundedCornerShape(16.dp)
             )
             .padding(

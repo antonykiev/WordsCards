@@ -2,6 +2,7 @@ package com.words.cards.presentation.state
 
 data class NewWordScreenContent(
     val word: String,
+    val isLoading: Boolean,
     val description: String,
     val translation: String,
     val transcription: String,
@@ -11,6 +12,7 @@ data class NewWordScreenContent(
     companion object {
         val INITIAL: NewWordScreenContent = NewWordScreenContent(
             word = "",
+            isLoading = true,
             description = "",
             translation = "",
             transcription = "",
