@@ -28,7 +28,7 @@ class WordLocalRepositoryImpl(
         return dataSource.updateWord(word)
     }
 
-    override suspend fun deleteWord(word: WordEntity): Result<Int> {
-        return dataSource.deleteWord(word)
+    override suspend fun deleteWord(id: Long): Result<Int> {
+        return dataSource.deleteWord(id)
     }
 }

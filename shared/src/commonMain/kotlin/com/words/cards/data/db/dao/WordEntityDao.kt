@@ -23,6 +23,6 @@ interface WordDao {
     @Update
     suspend fun updateWord(word: WordEntity): Int
 
-    @Delete
-    suspend fun deleteWord(word: WordEntity): Int
+    @Query("DELETE FROM words WHERE id = :id")
+    suspend fun deleteWordById(id: Long): Int
 }

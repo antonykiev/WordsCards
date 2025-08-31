@@ -9,7 +9,7 @@ interface WordLocalRepository {
     suspend fun getWordById(id: Long): Result<WordEntity>
     suspend fun insertWord(wordEntity: WordEntity): Result<Long>
     suspend fun updateWord(word: WordEntity): Result<Int>
-    suspend fun deleteWord(word: WordEntity): Result<Int>
+    suspend fun deleteWord(id: Long): Result<Int>
 
     companion object Mapper {
         fun mapToWordEntity(wordDomain: WordDomain): WordEntity {

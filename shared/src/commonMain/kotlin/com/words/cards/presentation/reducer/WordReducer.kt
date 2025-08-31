@@ -28,6 +28,7 @@ class WordReducer(
                         println("WordReducer - InitialLoad - onSuccess $intent")
                         updateContent {
                             it.copy(
+                                wordId = word.id,
                                 word = word.wordText,
                                 description = word.wordDescription,
                                 translation = word.wordTranslation,
@@ -38,6 +39,17 @@ class WordReducer(
                     },
                     onFailure = {
                         println("WordReducer - InitialLoad - onFailure $intent ${it.message}")
+                    }
+                )
+            }
+
+            is WordIntent.DeleteWord -> {
+                wordLocalRepository.deleteWord(intent.wordId).fold(
+                    onSuccess = {
+                        updateEvent(WordEvent.GoBack)
+                    },
+                    onFailure = {
+                        /* No-op */
                     }
                 )
             }

@@ -27,19 +27,31 @@ class WordDataSourceImpl(
 
     override suspend fun insertWord(word: WordEntity): Result<Long> {
         return withContext(dispatcher) {
-            runCatching { database.wordDao().insertWord(word) }
+            runCatching {
+                withContext(dispatcher) {
+                    database.wordDao().insertWord(word)
+                }
+            }
         }
     }
 
     override suspend fun updateWord(word: WordEntity): Result<Int> {
         return withContext(dispatcher) {
-            runCatching { database.wordDao().updateWord(word) }
+            runCatching {
+                withContext(dispatcher) {
+                    database.wordDao().updateWord(word)
+                }
+            }
         }
     }
 
-    override suspend fun deleteWord(word: WordEntity): Result<Int> {
+    override suspend fun deleteWord(id: Long): Result<Int> {
         return withContext(dispatcher) {
-            runCatching { database.wordDao().deleteWord(word) }
+            runCatching {
+                withContext(dispatcher) {
+                    database.wordDao().deleteWordById(id)
+                }
+            }
         }
     }
 }

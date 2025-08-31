@@ -8,5 +8,5 @@ interface WordDataSource {
     suspend fun getWordById(id: Long): Result<WordEntity?>
     suspend fun insertWord(word: WordEntity): Result<Long>
     suspend fun updateWord(word: WordEntity): Result<Int>
-    suspend fun deleteWord(word: WordEntity): Result<Int>
+    suspend fun deleteWord(id: Long): Result<Int>
 }

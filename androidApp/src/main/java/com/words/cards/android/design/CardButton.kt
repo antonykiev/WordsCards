@@ -21,6 +21,8 @@ import com.words.cards.android.R
 @Composable
 fun CardButton(
     modifier: Modifier = Modifier,
+    backgroundColor: Color = colorResource(R.color.brand_color),
+    textColor: Color = colorResource(R.color.light_text),
     text: String,
     onClick: () -> Unit,
     borderColor: Color = MaterialTheme.colorScheme.tertiary,
@@ -30,8 +32,8 @@ fun CardButton(
         onClick = onClick,
         shape = CircleShape,
         colors = ButtonDefaults.buttonColors(
-            containerColor = colorResource(R.color.brand_color),
-            contentColor = colorResource(R.color.light_text)
+            containerColor = backgroundColor,
+            contentColor = textColor
         )
     ) {
         Text(

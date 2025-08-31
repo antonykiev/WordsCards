@@ -3,4 +3,5 @@
     <color name="light_text">#FFFFFF</color>
     <color name="background">#FFFFFF</color>
     <color name="brand_color">#FF5076F1</color>
+    <color name="error_color">#F63434</color>
 </resources>
