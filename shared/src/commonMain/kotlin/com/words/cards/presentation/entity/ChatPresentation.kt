@@ -4,7 +4,7 @@ import kotlinx.serialization.Serializable
 
 @Serializable
 data class ChatPresentation(
-    val translation : String,
+    val translation : List<String>,
     val description : String,
     val sentences : List<String>,
 )

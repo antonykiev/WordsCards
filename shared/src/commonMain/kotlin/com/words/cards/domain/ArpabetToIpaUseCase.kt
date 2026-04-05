@@ -14,10 +14,8 @@ class ArpabetToIpaUseCase {
         "IY" to "i", "OW" to "oʊ", "OY" to "ɔɪ", "UH" to "ʊ", "UW" to "u"
     )
 
-
     operator fun invoke(arpabet: String): String {
         val phonemes: List<String> = arpabet.trim().split(" ")
-
         val ipaPhonemes = mutableListOf<String>()
 
         for (phoneme in phonemes) {

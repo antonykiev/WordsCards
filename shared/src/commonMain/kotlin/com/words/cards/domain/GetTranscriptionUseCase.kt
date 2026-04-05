@@ -8,20 +8,12 @@ class GetTranscriptionUseCase(
     suspend operator fun invoke(word: String): Result<String> {
         return getFileJsonUseCase.loadJsonFromAssets("cmudict.json")
             .mapCatching {
-                it[word].also {
-                    println("WordReducer - JsonElement: $it")
-                } ?: throw IllegalArgumentException("Word not found in dictionary")
-
+                it[word] ?: throw IllegalArgumentException("Word not found in dictionary")
             }
-            .map {
-                println("WordReducer - Word: $word, Arpabet: $it")
-                "$it"
-            }
+            .map { "$it" }
             .map {
                 val stringWithoutQuotes = removeQuotesUseCase.invoke(it)
-                arpabetToIpaUseCase.invoke(stringWithoutQuotes).also {
-                    println("WordReducer - result: $it")
-                }
+                arpabetToIpaUseCase.invoke(stringWithoutQuotes)
             }
     }
 }

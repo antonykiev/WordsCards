@@ -13,7 +13,13 @@ class GetTranscriptionUseCaseTest {
 
         private val getFileJsonUseCase: GetFileJsonUseCase = mockk()
         private val arpabetToIpaUseCase: ArpabetToIpaUseCase = ArpabetToIpaUseCase()
-        private val useCase = GetTranscriptionUseCase(getFileJsonUseCase, arpabetToIpaUseCase)
+        private val removeQuotesUseCase: RemoveQuotesUseCase = RemoveQuotesUseCase()
+
+        private val useCase = GetTranscriptionUseCase(
+            getFileJsonUseCase = getFileJsonUseCase,
+            arpabetToIpaUseCase = arpabetToIpaUseCase,
+            removeQuotesUseCase = removeQuotesUseCase
+        )
 
     @Test
     fun `invoke returns IPA transcription when word exists in dictionary`() = runTest {

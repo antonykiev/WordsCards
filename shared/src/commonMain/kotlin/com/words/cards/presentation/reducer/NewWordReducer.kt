@@ -43,7 +43,7 @@ class NewWordReducer(
                         isLoading = false,
                         description = wordInfo?.description.orEmpty(),
                         transcription = transcription,
-                        translation = wordInfo?.translation.orEmpty(),
+                        translation = wordInfo?.translation?.joinToString(separator = ", ").orEmpty(),
                         exampleList = wordInfo?.sentences
                             .orEmpty()
                             .mapIndexed { index, item ->
@@ -64,7 +64,7 @@ class NewWordReducer(
                         wordTranslation = wordInfo.translation,
                         wordTranscription = wordInfo.transcription,
                         wordExamples = wordInfo.exampleList,
-                        createdAt = currentDateUseCase.inSeconds()
+                        createdAt = currentDateUseCase.seconds()
                     )
                 )
                 updateEvent(NewWordEvent.Saved)

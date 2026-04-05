@@ -18,6 +18,10 @@ import io.ktor.http.contentType
 import io.ktor.serialization.kotlinx.json.json
 import kotlinx.serialization.json.Json
 
+
+/**
+ * https://cloud.cerebras.ai/platform/org_9pp9fp6tnpd9kw4f8yjkvtmm/get-started
+ */
 class RemoteWordInfoDataSource(
 
 ) {
@@ -25,7 +29,7 @@ class RemoteWordInfoDataSource(
     private companion object Constants {
         private val URL = "https://api.cerebras.ai/v1/chat/completions"
         private val TOKEN = "csk-fxv5ejcxc5jw93rymf5pdxev6h65e3fcwxpjf8h2nxpyp2hj"
-        private val LMM_MODEL = "llama-4-scout-17b-16e-instruct"
+        private val LMM_MODEL = "llama3.1-8b"
         private fun promt(word: String) = """
             generate translation with most relevant synonyms of word $word on Russian.
             write else English description what this word means.

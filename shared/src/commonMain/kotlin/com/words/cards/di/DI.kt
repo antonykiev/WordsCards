@@ -11,6 +11,7 @@ import com.words.cards.domain.CheckUserIsLoginUseCase
 import com.words.cards.domain.CurrentDateUseCase
 import com.words.cards.domain.GetFileJsonUseCase
 import com.words.cards.domain.GetTranscriptionUseCase
+import com.words.cards.domain.MapWordEntityToWordItem
 import com.words.cards.domain.RemoveQuotesUseCase
 import com.words.cards.domain.repository.WordLocalRepository
 import com.words.cards.presentation.reducer.LoginReducer
@@ -41,7 +42,8 @@ val loginDomainModule = module {
 val wordListDomainModule = module {
     factory {
         WordListReducer(
-            wordLocalRepository = get<WordLocalRepository>()
+            wordLocalRepository = get<WordLocalRepository>(),
+            mapWordEntityToWordItem = get<MapWordEntityToWordItem>(),
         )
     }
 }
@@ -82,6 +84,9 @@ val wordDomainModule = module {
         WordReducer(
             wordLocalRepository = get<WordLocalRepository>(),
         )
+    }
+    single {
+        MapWordEntityToWordItem()
     }
 }
 

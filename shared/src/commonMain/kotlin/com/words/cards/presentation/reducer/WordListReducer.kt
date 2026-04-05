@@ -1,6 +1,7 @@
 package com.words.cards.presentation.reducer
 
 import com.words.cards.data.db.entity.WordEntity
+import com.words.cards.domain.MapWordEntityToWordItem
 import com.words.cards.domain.repository.WordLocalRepository
 import com.words.cards.presentation.event.WordListEvent
 import com.words.cards.presentation.intent.WordListIntent
@@ -17,6 +18,7 @@ import kotlinx.coroutines.flow.update
 
 class WordListReducer(
     private val wordLocalRepository: WordLocalRepository,
+    private val mapWordEntityToWordItem: MapWordEntityToWordItem,
     private val coroutineDispatcher: CoroutineDispatcher = Dispatchers.Default,
 ) : Reducer<WordListEvent, WordListScreenContent, WordListIntent> {
 
@@ -39,16 +41,7 @@ class WordListReducer(
                     filterWord
                 ) { words: List<WordEntity>, keyWord: String ->
                     updateContent {
-                        val wordItems = words.map { word: WordEntity ->
-                            WordItem(
-                                id = word.id,
-                                word = word.wordText,
-                                transcription = word.wordTranscription,
-                                translation = word.wordTranslation,
-                                description = word.wordDescription
-                            )
-                        }
-
+                        val wordItems: List<WordItem> = mapWordEntityToWordItem.invoke(words)
                         if (keyWord.length > 2) {
                             it.copy(
                                 searchWord = keyWord,
