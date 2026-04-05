@@ -69,6 +69,10 @@ class NewWordReducer(
                 )
                 updateEvent(NewWordEvent.Saved)
             }
+
+            NewWordIntent.OnBackClicked -> {
+                updateEvent(NewWordEvent.GoBack)
+            }
         }
     }
 }

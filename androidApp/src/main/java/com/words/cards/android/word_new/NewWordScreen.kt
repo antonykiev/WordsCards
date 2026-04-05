@@ -6,7 +6,11 @@ import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
+import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.filled.KeyboardArrowLeft
 import androidx.compose.material3.CircularProgressIndicator
+import androidx.compose.material3.Icon
+import androidx.compose.material3.IconButton
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
@@ -46,9 +50,8 @@ fun NewWordScreen(
     LaunchedEffect(state.event) {
         when (val event: NewWordEvent = state.event) {
             NewWordEvent.Empty -> {}
-            NewWordEvent.Saved -> {
-                onBack()
-            }
+            NewWordEvent.Saved -> onBack()
+            NewWordEvent.GoBack -> onBack()
         }
         viewModel.onEventHandled(state.event)
     }
@@ -58,6 +61,9 @@ fun NewWordScreen(
         content = state.content,
         onSaveClicked = {
             viewModel.onIntent(NewWordIntent.OnSaveClicked)
+        },
+        onBackClicked = {
+            viewModel.onIntent(NewWordIntent.OnBackClicked)
         }
     )
 }
@@ -67,6 +73,7 @@ fun NewWordPane(
     modifier: Modifier = Modifier,
     content: NewWordScreenContent,
     onSaveClicked: () -> Unit,
+    onBackClicked: () -> Unit,
 ) {
     if (content.isLoading) {
         Box(
@@ -93,14 +100,15 @@ fun NewWordPane(
                 translation = content.translation,
                 transcription = content.transcription,
                 description = content.description,
-                exampleList = content.exampleList
+                exampleList = content.exampleList,
+                onBackClicked = onBackClicked
             )
 
             CardButton(
                 modifier = Modifier
                     .align(Alignment.BottomCenter)
                     .fillMaxWidth()
-                    .padding(horizontal = 24.dp)
+                    .padding(horizontal = 8.dp)
                     .padding(bottom = 24.dp),
                 text = "Save",
                 onClick = onSaveClicked
@@ -123,7 +131,8 @@ private fun NewWordPanePreview() {
             image = LoadableContent.Loading,
             description = "flabbergasted means to be extremely surprised or shocked."
         ),
-        onSaveClicked = {}
+        onSaveClicked = {},
+        onBackClicked = {}
     )
 }
 
@@ -141,6 +150,7 @@ private fun NewWordPaneLoadingPreview() {
             image = LoadableContent.Loading,
             description = "flabbergasted means to be extremely surprised or shocked."
         ),
-        onSaveClicked = {}
+        onSaveClicked = {},
+        onBackClicked = {}
     )
 }

@@ -53,6 +53,10 @@ class WordReducer(
                     }
                 )
             }
+
+            WordIntent.OnBackClicked -> {
+                updateEvent(WordEvent.GoBack)
+            }
         }
     }
 }

@@ -54,6 +54,9 @@ fun WordScreen(
         content = state.content,
         onDeleteClicked = { wordId ->
             viewModel.onIntent(WordIntent.DeleteWord(wordId = wordId))
+        },
+        onBackClicked = {
+            viewModel.onIntent(WordIntent.OnBackClicked)
         }
     )
 
@@ -65,6 +68,7 @@ fun WordPaneContent(
     modifier: Modifier = Modifier,
     content: WordScreenContent,
     onDeleteClicked: (Long) -> Unit,
+    onBackClicked: () -> Unit
 ) {
     Box(
         modifier = modifier,
@@ -74,7 +78,8 @@ fun WordPaneContent(
             translation = content.translation,
             transcription = content.transcription,
             description = content.description,
-            exampleList = content.exampleList
+            exampleList = content.exampleList,
+            onBackClicked = onBackClicked
         )
 
         CardButton(
@@ -98,6 +103,7 @@ private fun WordPaneContentPreview() {
     WordPaneContent(
         modifier = Modifier,
         onDeleteClicked = {},
+        onBackClicked = {},
         content = WordScreenContent(
             wordId = 1,
             word = "flabbergasted",
