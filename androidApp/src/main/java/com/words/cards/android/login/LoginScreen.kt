@@ -12,6 +12,7 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
+import androidx.compose.runtime.getValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.tooling.preview.Preview
@@ -20,9 +21,11 @@ import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import com.words.cards.android.design.CardButton
 import com.words.cards.android.design.CardInput
 import com.words.cards.android.design.Logo
+import com.words.cards.presentation.event.LoginEvent
 import com.words.cards.presentation.intent.LoginIntent
 import com.words.cards.presentation.state.InputStatus
 import com.words.cards.presentation.state.LoginScreenContent
+import com.words.cards.presentation.state.State
 import org.koin.androidx.compose.koinViewModel
 
 @Composable
@@ -30,11 +33,27 @@ fun LoginScreen(
     modifier: Modifier = Modifier,
     onLoginSuccessfully: () -> Unit,
 ) {
-    val viewModel = koinViewModel<LoginViewModel>()
-    val state = viewModel.state.collectAsStateWithLifecycle().value
+    val viewModel: LoginViewModel = koinViewModel<LoginViewModel>()
+    val state: State<LoginScreenContent, LoginEvent> by viewModel.state.collectAsStateWithLifecycle()
+
 
     LaunchedEffect(Unit) {
         viewModel.onIntent(LoginIntent.InitialLoad)
+    }
+
+    LaunchedEffect(state.event) {
+        when (val event = state.event) {
+            LoginEvent.Empty -> {}
+            LoginEvent.GoToWordList -> {
+                onLoginSuccessfully()
+            }
+            is LoginEvent.OnLoginFailed -> TODO()
+            is LoginEvent.OnLoginFieldIsNotValid -> TODO()
+            LoginEvent.OnLoginSuccess -> {
+                onLoginSuccessfully()
+            }
+            is LoginEvent.OnPasswordFieldIsNotValid -> TODO()
+        }
     }
 
     LoginPane(
@@ -50,6 +69,9 @@ fun LoginScreen(
         onLoginClick = {
             onLoginSuccessfully()
 //            viewModel.onIntent(LoginIntent.OnLoginClicked)
+        },
+        onContinueAsGuest = {
+            viewModel.onIntent(LoginIntent.OnContinueAsGuestClicked)
         }
     )
 }
@@ -61,6 +83,7 @@ fun LoginPane(
     onEmailChange: (String) -> Unit,
     onPasswordChange: (String) -> Unit,
     onLoginClick: () -> Unit,
+    onContinueAsGuest: () -> Unit,
 ) {
     Box(
         modifier = modifier
@@ -92,15 +115,31 @@ fun LoginPane(
             )
         }
 
-        CardButton(
+        Column(
             modifier = Modifier
                 .align(Alignment.BottomCenter)
                 .fillMaxWidth()
                 .padding(horizontal = 24.dp)
                 .padding(bottom = 24.dp),
-            text = content.loginButtonText,
-            onClick = onLoginClick
-        )
+        ) {
+            CardButton(
+                modifier = Modifier
+                    .fillMaxWidth(),
+                text = content.loginButtonText,
+                onClick = onLoginClick
+            )
+
+            Spacer(
+                modifier = Modifier.height(16.dp)
+            )
+
+            CardButton(
+                modifier = Modifier
+                    .fillMaxWidth(),
+                text = content.guestButtonText,
+                onClick = onContinueAsGuest
+            )
+        }
     }
 }
 
@@ -118,9 +157,11 @@ private fun LoginPanePreview() {
             passwordInputText = "4567",
             passwordInputStatus = InputStatus.Initial,
             loginButtonText = "LOGIN",
+            guestButtonText = "Continue as guest",
         ),
         onEmailChange = {},
         onPasswordChange = {},
         onLoginClick = {},
+        onContinueAsGuest = {}
     )
 }

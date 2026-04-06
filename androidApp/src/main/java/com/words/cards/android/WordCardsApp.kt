@@ -18,6 +18,7 @@ class WordCardsApp : Application() {
                 androidModule +
                         sharedDomainModule +
                         splashModule +
+                        mainActivityModule +
                         loginAndroidModule +
                         wordsListModule +
                         wordModule +

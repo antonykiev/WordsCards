@@ -5,7 +5,7 @@ import androidx.room.Entity
 import androidx.room.PrimaryKey
 
 @Entity(tableName = "settings")
-data class Settings(
+data class SettingsEntity(
     @PrimaryKey
     @ColumnInfo(name = "id")
     val id: Long = 1,

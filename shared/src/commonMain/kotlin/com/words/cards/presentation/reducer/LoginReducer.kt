@@ -1,5 +1,6 @@
 package com.words.cards.presentation.reducer
 
+import com.words.cards.domain.CreateGuestUserUseCase
 import com.words.cards.presentation.event.LoginEvent
 import com.words.cards.presentation.intent.LoginIntent
 import com.words.cards.presentation.state.InputStatus
@@ -8,7 +9,9 @@ import com.words.cards.presentation.state.State
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.update
 
-class LoginReducer : Reducer<LoginEvent, LoginScreenContent, LoginIntent> {
+class LoginReducer(
+    private val createGuestUserUseCase: CreateGuestUserUseCase
+) : Reducer<LoginEvent, LoginScreenContent, LoginIntent> {
     override val mutableState: MutableStateFlow<State<LoginScreenContent, LoginEvent>> =
         MutableStateFlow(
             State(
@@ -34,6 +37,7 @@ class LoginReducer : Reducer<LoginEvent, LoginScreenContent, LoginIntent> {
                             passwordInputText = "",
                             passwordInputStatus = InputStatus.Initial,
                             loginButtonText = "Login",
+                            guestButtonText = "Continue as guest",
                         )
                     )
                 }
@@ -61,6 +65,11 @@ class LoginReducer : Reducer<LoginEvent, LoginScreenContent, LoginIntent> {
                         )
                     )
                 }
+            }
+
+            LoginIntent.OnContinueAsGuestClicked -> {
+                createGuestUserUseCase.invoke()
+                updateEvent(LoginEvent.GoToWordList)
             }
         }
     }

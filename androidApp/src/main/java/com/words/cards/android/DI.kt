@@ -2,9 +2,11 @@ package com.words.cards.android
 
 import androidx.room.Room
 import com.words.cards.data.db.AppDatabase
+import com.words.cards.presentation.reducer.MainReducer
 import com.words.cards.resource.AssetReader
 import com.words.cards.resource.ResourceProvider
 import org.koin.android.ext.koin.androidContext
+import org.koin.androidx.viewmodel.dsl.viewModel
 import org.koin.dsl.bind
 import org.koin.dsl.module
 
@@ -26,4 +28,12 @@ val androidModule = module {
             name = "words_cards_database",
         ).build()
     } bind AppDatabase::class
+}
+
+val mainActivityModule = module {
+    viewModel {
+        MainViewModel(
+            reducer = get<MainReducer>(),
+        )
+    }
 }

@@ -10,6 +10,7 @@ data class LoginScreenContent(
     val passwordInputText: String,
     val passwordInputStatus: InputStatus,
     val loginButtonText: String,
+    val guestButtonText: String,
 ) {
     companion object {
         val INITIAL = LoginScreenContent(
@@ -22,6 +23,7 @@ data class LoginScreenContent(
             passwordInputText = "",
             passwordInputStatus = InputStatus.Initial,
             loginButtonText = "",
+            guestButtonText = "",
         )
     }
 }
