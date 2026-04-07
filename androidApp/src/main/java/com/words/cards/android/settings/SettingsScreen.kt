@@ -10,11 +10,13 @@ import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.itemsIndexed
 import androidx.compose.foundation.shape.RoundedCornerShape
+import androidx.compose.material3.Button
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.ModalBottomSheet
@@ -22,9 +24,9 @@ import androidx.compose.material3.Text
 import androidx.compose.material3.rememberModalBottomSheetState
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
+import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
-import androidx.compose.runtime.getValue
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
@@ -37,7 +39,6 @@ import com.words.cards.presentation.intent.SettingsIntent
 import com.words.cards.presentation.state.ButtonState
 import com.words.cards.presentation.state.Language
 import com.words.cards.presentation.state.SettingsScreenContent
-import com.words.cards.presentation.state.Vocabulary
 import org.koin.androidx.compose.koinViewModel
 
 @Composable
@@ -61,8 +62,7 @@ fun SettingsScreen(
     SettingsPane(
         modifier = modifier,
         content = state.content,
-        onLanguageSelected = { vocabularyId, isPrimary, language ->
-
+        onLanguageSelected = { vocabularyId, language ->
 
         }
     )
@@ -72,11 +72,10 @@ fun SettingsScreen(
 fun SettingsPane(
     modifier: Modifier = Modifier,
     content: SettingsScreenContent,
-    onLanguageSelected: (Long, Boolean, Language.Selected) -> Unit
+    onLanguageSelected: (Boolean, Language.Selected) -> Unit
 ) {
-    var selectedVocabularyId by remember { mutableStateOf<Long?>(null) }
-    var isPrimarySelected by remember { mutableStateOf(true) }
     var showBottomSheet by remember { mutableStateOf(false) }
+    var isPrimarySelected by remember { mutableStateOf(true) }
 
     Box(
         modifier = modifier
@@ -84,102 +83,123 @@ fun SettingsPane(
             .background(MaterialTheme.colorScheme.background)
     ) {
 
-        LazyColumn(
-            modifier = Modifier.fillMaxSize(),
-            contentPadding = PaddingValues(16.dp),
-            verticalArrangement = Arrangement.spacedBy(12.dp)
+        Column(
+            modifier = Modifier
+                .fillMaxSize()
+                .padding(16.dp)
         ) {
-            itemsIndexed(
-                content.vocabularies,
-                key = { index, item -> item.id }
-            ) { index, vocab ->
-                VocabularyRow(
-                    vocabulary = vocab,
-                    onPrimaryClick = {
-                        selectedVocabularyId = vocab.id
-                        isPrimarySelected = true
-                        showBottomSheet = true
-                    },
-                    onSecondaryClick = {
-                        selectedVocabularyId = vocab.id
-                        isPrimarySelected = false
-                        showBottomSheet = true
-                    }
-                )
+
+            // Title
+            Text(
+                text = content.title,
+                style = MaterialTheme.typography.headlineMedium
+            )
+
+            Spacer(modifier = Modifier.height(8.dp))
+
+            Text(
+                text = content.subtitle,
+                style = MaterialTheme.typography.bodyMedium,
+                color = MaterialTheme.colorScheme.onBackground.copy(alpha = 0.7f)
+            )
+
+            Spacer(modifier = Modifier.height(24.dp))
+
+            // Primary language
+            LanguageSection(
+                description = content.primaryDescription,
+                language = content.primary,
+                onClick = {
+                    isPrimarySelected = true
+                    showBottomSheet = true
+                }
+            )
+
+            Spacer(modifier = Modifier.height(16.dp))
+
+            // Secondary language
+            LanguageSection(
+                description = content.secondaryDescription,
+                language = content.secondary,
+                onClick = {
+                    isPrimarySelected = false
+                    showBottomSheet = true
+                }
+            )
+
+            Spacer(modifier = Modifier.weight(1f))
+
+            Button(
+                onClick = { /* TODO */ },
+                enabled = content.buttonState.active,
+                modifier = Modifier.fillMaxWidth()
+            ) {
+                Text(text = content.buttonState.text)
             }
         }
 
-        if (showBottomSheet && selectedVocabularyId != null) {
+        if (showBottomSheet) {
             CountryPickerBottomSheet(
                 languageList = content.languages,
                 onCountrySelected = { selected ->
-                    onLanguageSelected(
-                        selectedVocabularyId!!,
-                        isPrimarySelected,
-                        selected
-                    )
+                    onLanguageSelected(isPrimarySelected, selected)
                     showBottomSheet = false
                 },
-                onDismiss = {
-                    showBottomSheet = false
-                }
+                onDismiss = { showBottomSheet = false }
             )
         }
     }
 }
 
 @Composable
-fun VocabularyRow(
-    vocabulary: Vocabulary,
-    onPrimaryClick: () -> Unit,
-    onSecondaryClick: () -> Unit
-) {
-    Row(
-        modifier = Modifier
-            .fillMaxWidth()
-            .background(
-                MaterialTheme.colorScheme.surfaceVariant,
-                shape = RoundedCornerShape(16.dp)
-            )
-            .padding(16.dp),
-        horizontalArrangement = Arrangement.SpaceBetween
-    ) {
-
-        LanguageBox(
-            language = vocabulary.primary,
-            onClick = onPrimaryClick
-        )
-
-        Text(
-            text = "→",
-            style = MaterialTheme.typography.titleMedium
-        )
-
-        LanguageBox(
-            language = vocabulary.secondary,
-            onClick = onSecondaryClick
-        )
-    }
-}
-
-@Composable
-fun LanguageBox(
+fun LanguageSection(
+    description: String,
     language: Language,
     onClick: () -> Unit
 ) {
-    val text = when (language) {
-        is Language.Empty -> "Select"
-        is Language.Selected -> "${language.flag} ${language.name}"
-    }
+    Column {
+        Text(
+            text = description,
+            style = MaterialTheme.typography.labelMedium,
+            color = MaterialTheme.colorScheme.onBackground.copy(alpha = 0.6f)
+        )
 
-    Box(
-        modifier = Modifier
-            .clip(RoundedCornerShape(12.dp))
-            .clickable { onClick() }
-            .background(MaterialTheme.colorScheme.primary.copy(alpha = 0.1f))
-            .padding(horizontal = 12.dp, vertical = 8.dp)
-    ) {
-        Text(text = text)
+        Spacer(modifier = Modifier.height(6.dp))
+
+        Row(
+            modifier = Modifier
+                .fillMaxWidth()
+                .clip(RoundedCornerShape(16.dp))
+                .clickable { onClick() }
+                .background(MaterialTheme.colorScheme.surfaceVariant)
+                .padding(16.dp),
+            verticalAlignment = Alignment.CenterVertically
+        ) {
+
+            when (language) {
+                is Language.Empty -> {
+                    Text(
+                        text = "Select language",
+                        style = MaterialTheme.typography.bodyLarge,
+                        color = MaterialTheme.colorScheme.onSurfaceVariant.copy(alpha = 0.6f)
+                    )
+                }
+
+                is Language.Selected -> {
+                    Text(
+                        text = language.flag,
+                        style = MaterialTheme.typography.titleLarge
+                    )
+
+                    Spacer(modifier = Modifier.width(12.dp))
+
+                    Text(
+                        text = language.name,
+                        style = MaterialTheme.typography.bodyLarge
+                    )
+                }
+            }
+        }
     }
 }
 
@@ -294,45 +314,34 @@ private fun CountryPickerBottomSheetPreview() {
     )
 }
 
-@Preview
+@Preview(showBackground = true)
 @Composable
 fun SettingsPanePreview() {
-    SettingsPane(
-        content = SettingsScreenContent(
-            vocabularies = listOf(
-                Vocabulary(
-                    id = 1,
-                    primary = Language.Selected(
-                        id = 1,
-                        flag = "🇺🇸",
-                        name = "United States"
-                    ),
-                    secondary = Language.Selected(
-                        id = 2,
-                        flag = "🇬🇧",
-                        name = "United Kingdom"
-                    )
-                )
-            ),
-            languages = listOf(
-                Language.Selected(
-                    id = 1,
-                    flag = "🇺🇸",
-                    name = "United States"
-                ),
-                Language.Selected(
-                    id = 2,
-                    flag = "🇬🇧",
-                    name = "United Kingdom"
-                )
-            ),
-            buttonState = ButtonState(
-                text = "Next",
-                active = true
-            ),
 
-            ),
-        onLanguageSelected = { _, _, _ -> }
+    val mockLanguages = listOf(
+        Language.Selected(1, "🇵🇱", "Polish"),
+        Language.Selected(2, "🇺🇸", "English"),
+        Language.Selected(3, "🇯🇵", "Japanese"),
+        Language.Selected(4, "🇩🇪", "German"),
+        Language.Selected(5, "🇫🇷", "French"),
+    )
+
+    val content = SettingsScreenContent(
+        title = "Language Settings",
+        subtitle = "Choose your learning languages",
+        primaryDescription = "I speak",
+        primary = Language.Selected(1, "🇵🇱", "Polish"),
+        secondaryDescription = "I want to learn",
+        secondary = Language.Empty,
+        buttonState = ButtonState(
+            text = "Continue",
+            active = true
+        ),
+        languages = mockLanguages
+    )
+    SettingsPane(
+        content = content,
+        onLanguageSelected = { _, _ -> }
     )
 }
 

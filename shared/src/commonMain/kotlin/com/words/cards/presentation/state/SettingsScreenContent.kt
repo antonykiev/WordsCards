@@ -1,9 +1,14 @@
 package com.words.cards.presentation.state
 
 data class SettingsScreenContent(
-    val vocabularies: List<Vocabulary>,
+    val title: String,
+    val subtitle: String,
+    val primaryDescription: String,
+    val primary: Language,
+    val secondaryDescription: String,
+    val secondary: Language,
+    val buttonState: ButtonState,
     val languages: List<Language.Selected>,
-    val buttonState: ButtonState
 )
 
 sealed interface Language {
@@ -14,12 +19,6 @@ sealed interface Language {
         val name: String,
     ): Language
 }
-
-data class Vocabulary(
-    val id: Long,
-    val primary: Language,
-    val secondary: Language,
-)
 
 data class ButtonState(
     val text: String,
