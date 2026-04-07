@@ -25,6 +25,7 @@ import com.words.cards.presentation.reducer.MainReducer
 import com.words.cards.presentation.reducer.SplashReducer
 import com.words.cards.presentation.reducer.WordListReducer
 import com.words.cards.presentation.reducer.NewWordReducer
+import com.words.cards.presentation.reducer.SettingsReducer
 import com.words.cards.presentation.reducer.WordReducer
 import com.words.cards.resource.AssetReader
 import org.koin.dsl.module
@@ -149,6 +150,13 @@ val repositoryModule = module {
     }
 }
 
+val settingsDomainModule = module {
+    factory {
+        SettingsReducer()
+    }
+}
+
+
 val sharedDomainModule = buildList {
     add(splashDomainModule)
     add(mainDomainModule)
@@ -156,6 +164,7 @@ val sharedDomainModule = buildList {
     add(wordListDomainModule)
     add(newWordDomainModule)
     add(wordDomainModule)
+    add(settingsDomainModule)
     add(dataSourceModule)
     add(repositoryModule)
 }
