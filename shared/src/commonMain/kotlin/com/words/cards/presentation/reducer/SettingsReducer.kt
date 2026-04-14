@@ -1,13 +1,17 @@
 package com.words.cards.presentation.reducer
 
+import com.words.cards.domain.SaveSettingsUseCase
 import com.words.cards.presentation.event.SettingsEvent
 import com.words.cards.presentation.intent.SettingsIntent
+import com.words.cards.presentation.state.Language
 import com.words.cards.presentation.state.SettingsScreenContent
 import com.words.cards.presentation.state.State
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.update
 
-class SettingsReducer : Reducer<SettingsEvent, SettingsScreenContent, SettingsIntent> {
+class SettingsReducer(
+    private val saveSettingsUseCase: SaveSettingsUseCase,
+) : Reducer<SettingsEvent, SettingsScreenContent, SettingsIntent> {
 
     override val mutableState: MutableStateFlow<State<SettingsScreenContent, SettingsEvent>> =
         MutableStateFlow(
@@ -31,7 +35,19 @@ class SettingsReducer : Reducer<SettingsEvent, SettingsScreenContent, SettingsIn
                     state.copy(content = newContent)
                 }
             }
+
             SettingsIntent.OnNextClicked -> {
+                if (mutableState.value.content.primary is Language.Selected
+                    && mutableState.value.content.secondary is Language.Selected
+                ) {
+                    saveSettingsUseCase(
+                        learnedLanguageId = (mutableState.value.content.secondary as Language.Selected).id,
+                        originalLanguageId = (mutableState.value.content.primary as Language.Selected).id,
+                    )
+                } else {
+                    Unit
+                }
+
                 updateEvent(SettingsEvent.OnNextClicked)
             }
         }

@@ -2,7 +2,6 @@ package com.words.cards.data.db
 
 import androidx.room.Database
 import androidx.room.RoomDatabase
-import com.words.cards.data.db.dao.LanguageDao
 import com.words.cards.data.db.dao.SettingsDao
 import com.words.cards.data.db.dao.UserDao
 import com.words.cards.data.db.dao.WordDao
@@ -24,5 +23,4 @@ abstract class AppDatabase : RoomDatabase() {
     abstract fun wordDao(): WordDao
     abstract fun userDao(): UserDao
     abstract fun settingsDao(): SettingsDao
-    abstract fun languageDao(): LanguageDao
 }

@@ -21,9 +21,9 @@ import com.words.cards.domain.CurrentDateUseCase
 import com.words.cards.domain.GetFileJsonUseCase
 import com.words.cards.domain.GetSplashLoadedUseCase
 import com.words.cards.domain.GetTranscriptionUseCase
-import com.words.cards.domain.InitializeLanguagesUseCase
 import com.words.cards.domain.MapWordEntityToWordItem
 import com.words.cards.domain.RemoveQuotesUseCase
+import com.words.cards.domain.SaveSettingsUseCase
 import com.words.cards.domain.repository.WordLocalRepository
 import com.words.cards.presentation.reducer.LoginReducer
 import com.words.cards.presentation.reducer.MainReducer
@@ -44,7 +44,6 @@ val mainDomainModule = module {
     factory {
         GetSplashLoadedUseCase(
             userRepository = get<UserLocalRepository>(),
-            initializeLanguagesUseCase = get<InitializeLanguagesUseCase>()
         )
     }
 }
@@ -168,11 +167,13 @@ val repositoryModule = module {
 
 val settingsDomainModule = module {
     factory {
-        SettingsReducer()
+        SettingsReducer(
+            saveSettingsUseCase = get<SaveSettingsUseCase>()
+        )
     }
     factory {
-        InitializeLanguagesUseCase(
-            languageDao = get<AppDatabase>().languageDao()
+        SaveSettingsUseCase(
+            settingsRepository = get<SettingsLocalRepository>()
         )
     }
 }
