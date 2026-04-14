@@ -1,5 +1,7 @@
 package com.words.cards.presentation.state
 
+import com.words.cards.domain.AppLanguages
+
 data class SettingsScreenContent(
     val title: String,
     val subtitle: String,
@@ -31,17 +33,21 @@ data class SettingsScreenContent(
 sealed interface Language {
     data object Empty : Language
     enum class Selected(
-        val id: Long,
-        val flag: String,
-        val languageName: String,
+        val appLanguage: AppLanguages,
     ) : Language {
-        POLISH(1, "🇵🇱", "Polish"),
-        ENGLISH(2, "🇺🇸", "English"),
-        JAPANESE(3, "🇯🇵", "Japanese"),
-        GERMAN(4, "🇩🇪", "German"),
-        FRENCH(5, "🇫🇷", "French"),
-        RUSSIAN(6, "🇷🇺", "Russian"),
-        UKRAINIAN(7, "🇺🇦", "Ukrainian");
+        POLISH(AppLanguages.POLISH),
+        ENGLISH(AppLanguages.ENGLISH),
+        SPANISH(AppLanguages.SPANISH),
+        GERMAN(AppLanguages.GERMAN),
+        FRENCH(AppLanguages.FRENCH),
+        RUSSIAN(AppLanguages.RUSSIAN),
+        UKRAINIAN(AppLanguages.UKRAINIAN),
+        SWEDISH(AppLanguages.SWEDISH),
+        ITALIAN(AppLanguages.ITALIAN);
+
+        val id: Long get() = appLanguage.id
+        val flag: String get() = appLanguage.flag
+        val languageName: String get() = appLanguage.languageName
     }
 }
 
