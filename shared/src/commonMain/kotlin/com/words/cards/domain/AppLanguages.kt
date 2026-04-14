@@ -13,5 +13,5 @@ enum class AppLanguages(
     RUSSIAN(6, "🇷🇺", "Russian"),
     UKRAINIAN(7, "🇺🇦", "Ukrainian"),
     SWEDISH(8, "🇸🇪", "Swedish"),
-    ITALIAN(9, "🇮🇹", "ITALIAN");
+    ITALIAN(9, "🇮🇹", "Italian");
 }
