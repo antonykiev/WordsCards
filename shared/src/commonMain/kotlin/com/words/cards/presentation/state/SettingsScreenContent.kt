@@ -16,33 +16,33 @@ data class SettingsScreenContent(
             title = "Language Settings",
             subtitle = "Choose your learning languages",
             primaryDescription = "I speak",
-            primary = Language.Selected(1, "🇵🇱", "Polish"),
+            primary = Language.Selected.POLISH,
             secondaryDescription = "I want to learn",
             secondary = Language.Empty,
             buttonState = ButtonState(
                 text = "Continue",
                 active = true
             ),
-            languages = listOf(
-                Language.Selected(1, "🇵🇱", "Polish"),
-                Language.Selected(2, "🇺🇸", "English"),
-                Language.Selected(3, "🇯🇵", "Japanese"),
-                Language.Selected(4, "🇩🇪", "German"),
-                Language.Selected(5, "🇫🇷", "French"),
-                Language.Selected(6, "🇷🇺", "Russian"),
-                Language.Selected(7, "🇺🇦", "Ukrainian"),
-            )
+            languages = Language.Selected.entries
         )
     }
 }
 
 sealed interface Language {
     data object Empty : Language
-    data class Selected(
+    enum class Selected(
         val id: Long,
         val flag: String,
-        val name: String,
-    ) : Language
+        val languageName: String,
+    ) : Language {
+        POLISH(1, "🇵🇱", "Polish"),
+        ENGLISH(2, "🇺🇸", "English"),
+        JAPANESE(3, "🇯🇵", "Japanese"),
+        GERMAN(4, "🇩🇪", "German"),
+        FRENCH(5, "🇫🇷", "French"),
+        RUSSIAN(6, "🇷🇺", "Russian"),
+        UKRAINIAN(7, "🇺🇦", "Ukrainian");
+    }
 }
 
 data class ButtonState(

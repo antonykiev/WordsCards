@@ -62,8 +62,8 @@ fun SettingsScreen(
     SettingsPane(
         modifier = modifier,
         content = state.content,
-        onLanguageSelected = {  isPrimary, language ->
-            viewModel.onIntent(SettingsIntent.SelectLanguage( isPrimary, language))
+        onLanguageSelected = { isPrimary, language ->
+            viewModel.onIntent(SettingsIntent.SelectLanguage(isPrimary, language))
         },
         onNextClicked = onNextClicked
     )
@@ -196,7 +196,7 @@ fun LanguageSection(
                     Spacer(modifier = Modifier.width(12.dp))
 
                     Text(
-                        text = language.name,
+                        text = language.languageName,
                         style = MaterialTheme.typography.bodyLarge
                     )
                 }
@@ -276,7 +276,7 @@ fun CountryItem(
         Spacer(modifier = Modifier.width(12.dp))
 
         Text(
-            text = language.name,
+            text = language.languageName,
             style = MaterialTheme.typography.bodyLarge
         )
     }
@@ -286,11 +286,7 @@ fun CountryItem(
 @Composable
 private fun CountryItemPreview() {
     CountryItem(
-        language = Language.Selected(
-            id = 1,
-            flag = "🇺🇸",
-            name = "United States"
-        ),
+        language = Language.Selected.ENGLISH,
         onClick = {}
     )
 }
@@ -300,16 +296,8 @@ private fun CountryItemPreview() {
 private fun CountryPickerBottomSheetPreview() {
     CountryPickerBottomSheet(
         languageList = listOf(
-            Language.Selected(
-                id = 1,
-                flag = "🇺🇸",
-                name = "United States"
-            ),
-            Language.Selected(
-                id = 2,
-                flag = "🇬🇧",
-                name = "United Kingdom"
-            )
+            Language.Selected.ENGLISH,
+            Language.Selected.POLISH
         ),
         onCountrySelected = {},
         onDismiss = { }
@@ -320,26 +308,18 @@ private fun CountryPickerBottomSheetPreview() {
 @Composable
 fun SettingsPanePreview() {
 
-    val mockLanguages = listOf(
-        Language.Selected(1, "🇵🇱", "Polish"),
-        Language.Selected(2, "🇺🇸", "English"),
-        Language.Selected(3, "🇯🇵", "Japanese"),
-        Language.Selected(4, "🇩🇪", "German"),
-        Language.Selected(5, "🇫🇷", "French"),
-    )
-
     val content = SettingsScreenContent(
         title = "Language Settings",
         subtitle = "Choose your learning languages",
         primaryDescription = "I speak",
-        primary = Language.Selected(1, "🇵🇱", "Polish"),
+        primary = Language.Selected.POLISH,
         secondaryDescription = "I want to learn",
         secondary = Language.Empty,
         buttonState = ButtonState(
             text = "Continue",
             active = true
         ),
-        languages = mockLanguages
+        languages = Language.Selected.entries
     )
     SettingsPane(
         content = content,
@@ -347,4 +327,3 @@ fun SettingsPanePreview() {
         onNextClicked = {}
     )
 }
-
