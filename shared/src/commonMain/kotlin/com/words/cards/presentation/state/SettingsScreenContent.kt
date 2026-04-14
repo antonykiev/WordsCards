@@ -9,15 +9,40 @@ data class SettingsScreenContent(
     val secondary: Language,
     val buttonState: ButtonState,
     val languages: List<Language.Selected>,
-)
+) {
+    companion object {
+
+        val INITIAL = SettingsScreenContent(
+            title = "Language Settings",
+            subtitle = "Choose your learning languages",
+            primaryDescription = "I speak",
+            primary = Language.Selected(1, "🇵🇱", "Polish"),
+            secondaryDescription = "I want to learn",
+            secondary = Language.Empty,
+            buttonState = ButtonState(
+                text = "Continue",
+                active = true
+            ),
+            languages = listOf(
+                Language.Selected(1, "🇵🇱", "Polish"),
+                Language.Selected(2, "🇺🇸", "English"),
+                Language.Selected(3, "🇯🇵", "Japanese"),
+                Language.Selected(4, "🇩🇪", "German"),
+                Language.Selected(5, "🇫🇷", "French"),
+                Language.Selected(6, "🇷🇺", "Russian"),
+                Language.Selected(7, "🇺🇦", "Ukrainian"),
+            )
+        )
+    }
+}
 
 sealed interface Language {
-    data object Empty: Language
+    data object Empty : Language
     data class Selected(
         val id: Long,
         val flag: String,
         val name: String,
-    ): Language
+    ) : Language
 }
 
 data class ButtonState(

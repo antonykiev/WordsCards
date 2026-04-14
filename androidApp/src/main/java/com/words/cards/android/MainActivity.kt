@@ -22,6 +22,7 @@ import androidx.navigation.compose.currentBackStackEntryAsState
 import androidx.navigation.compose.rememberNavController
 import androidx.navigation.navArgument
 import com.words.cards.android.login.LoginScreen
+import com.words.cards.android.settings.SettingsScreen
 import com.words.cards.android.splash.SplashScreen
 import com.words.cards.android.word.WordScreen
 import com.words.cards.android.word_new.NewWordScreen
@@ -80,10 +81,7 @@ class MainActivity : ComponentActivity() {
             composable(route = "splash") {
                 SplashScreen(
                     onSuccessfullyLoaded = {
-                        println("Main onSuccessfullyLoaded ")
                         viewModel.onIntent(MainIntent.SplashLoaded)
-//                        navController.navigate("word_list")
-//                        navController.navigate("login")
                     }
                 )
             }
@@ -92,6 +90,16 @@ class MainActivity : ComponentActivity() {
                     modifier = Modifier
                         .padding(paddingValues),
                     onLoginSuccessfully = {
+                        navController.navigate("word_list")
+                    },
+                    onContinueAsGuest = {
+                        navController.navigate("settings")
+                    }
+                )
+            }
+            composable("settings") {
+                SettingsScreen(
+                    onNextClicked = {
                         navController.navigate("word_list")
                     }
                 )

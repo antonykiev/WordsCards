@@ -2,6 +2,7 @@ package com.words.cards.android
 
 import android.app.Application
 import com.words.cards.android.login.loginAndroidModule
+import com.words.cards.android.settings.settingsModule
 import com.words.cards.android.splash.splashModule
 import com.words.cards.android.word.wordModule
 import com.words.cards.android.word_new.newWordModule
@@ -19,6 +20,7 @@ class WordCardsApp : Application() {
                         sharedDomainModule +
                         splashModule +
                         mainActivityModule +
+                        settingsModule +
                         loginAndroidModule +
                         wordsListModule +
                         wordModule +

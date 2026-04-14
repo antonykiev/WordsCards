@@ -62,9 +62,10 @@ fun SettingsScreen(
     SettingsPane(
         modifier = modifier,
         content = state.content,
-        onLanguageSelected = { vocabularyId, language ->
-
-        }
+        onLanguageSelected = {  isPrimary, language ->
+            viewModel.onIntent(SettingsIntent.SelectLanguage( isPrimary, language))
+        },
+        onNextClicked = onNextClicked
     )
 }
 
@@ -72,7 +73,8 @@ fun SettingsScreen(
 fun SettingsPane(
     modifier: Modifier = Modifier,
     content: SettingsScreenContent,
-    onLanguageSelected: (Boolean, Language.Selected) -> Unit
+    onLanguageSelected: (Boolean, Language.Selected) -> Unit,
+    onNextClicked: () -> Unit
 ) {
     var showBottomSheet by remember { mutableStateOf(false) }
     var isPrimarySelected by remember { mutableStateOf(true) }
@@ -130,7 +132,7 @@ fun SettingsPane(
             Spacer(modifier = Modifier.weight(1f))
 
             Button(
-                onClick = { /* TODO */ },
+                onClick = { onNextClicked() },
                 enabled = content.buttonState.active,
                 modifier = Modifier.fillMaxWidth()
             ) {
@@ -341,7 +343,8 @@ fun SettingsPanePreview() {
     )
     SettingsPane(
         content = content,
-        onLanguageSelected = { _, _ -> }
+        onLanguageSelected = { _, _ -> },
+        onNextClicked = {}
     )
 }
 

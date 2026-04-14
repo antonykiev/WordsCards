@@ -68,8 +68,8 @@ class LoginReducer(
             }
 
             LoginIntent.OnContinueAsGuestClicked -> {
-                createGuestUserUseCase.invoke()
-                updateEvent(LoginEvent.GoToWordList)
+//                createGuestUserUseCase.invoke()
+                updateEvent(LoginEvent.GoToSettings)
             }
         }
     }

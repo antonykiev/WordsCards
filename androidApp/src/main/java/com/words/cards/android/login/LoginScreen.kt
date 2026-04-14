@@ -32,6 +32,7 @@ import org.koin.androidx.compose.koinViewModel
 fun LoginScreen(
     modifier: Modifier = Modifier,
     onLoginSuccessfully: () -> Unit,
+    onContinueAsGuest: () -> Unit,
 ) {
     val viewModel: LoginViewModel = koinViewModel<LoginViewModel>()
     val state: State<LoginScreenContent, LoginEvent> by viewModel.state.collectAsStateWithLifecycle()
@@ -49,10 +50,9 @@ fun LoginScreen(
             }
             is LoginEvent.OnLoginFailed -> TODO()
             is LoginEvent.OnLoginFieldIsNotValid -> TODO()
-            LoginEvent.OnLoginSuccess -> {
-                onLoginSuccessfully()
-            }
+            LoginEvent.OnLoginSuccess -> onLoginSuccessfully()
             is LoginEvent.OnPasswordFieldIsNotValid -> TODO()
+            LoginEvent.GoToSettings -> onContinueAsGuest()
         }
     }
 
