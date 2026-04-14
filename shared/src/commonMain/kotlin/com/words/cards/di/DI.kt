@@ -1,11 +1,15 @@
 package com.words.cards.di
 
 import com.words.cards.data.datasource.RemoteWordInfoDataSource
+import com.words.cards.data.datasource.SettingsDataSource
+import com.words.cards.data.datasource.SettingsDataSourceImpl
 import com.words.cards.data.datasource.UserDataSource
 import com.words.cards.data.datasource.UserDataSourceImpl
 import com.words.cards.data.datasource.WordDataSource
 import com.words.cards.data.datasource.WordDataSourceImpl
 import com.words.cards.data.db.AppDatabase
+import com.words.cards.data.repository.SettingsLocalRepository
+import com.words.cards.data.repository.SettingsLocalRepositoryImpl
 import com.words.cards.data.repository.UserLocalRepository
 import com.words.cards.data.repository.UserLocalRepositoryImpl
 import com.words.cards.data.repository.WordLocalRepositoryImpl
@@ -17,6 +21,7 @@ import com.words.cards.domain.CurrentDateUseCase
 import com.words.cards.domain.GetFileJsonUseCase
 import com.words.cards.domain.GetSplashLoadedUseCase
 import com.words.cards.domain.GetTranscriptionUseCase
+import com.words.cards.domain.InitializeLanguagesUseCase
 import com.words.cards.domain.MapWordEntityToWordItem
 import com.words.cards.domain.RemoveQuotesUseCase
 import com.words.cards.domain.repository.WordLocalRepository
@@ -38,7 +43,8 @@ val mainDomainModule = module {
     }
     factory {
         GetSplashLoadedUseCase(
-            userRepository = get<UserLocalRepository>()
+            userRepository = get<UserLocalRepository>(),
+            initializeLanguagesUseCase = get<InitializeLanguagesUseCase>()
         )
     }
 }
@@ -130,6 +136,11 @@ val dataSourceModule = module {
             database = get<AppDatabase>()
         )
     }
+    single<SettingsDataSource> {
+        SettingsDataSourceImpl(
+            database = get<AppDatabase>()
+        )
+    }
 }
 
 val repositoryModule = module {
@@ -148,11 +159,21 @@ val repositoryModule = module {
             dataSource = get<UserDataSource>()
         )
     }
+    single<SettingsLocalRepository> {
+        SettingsLocalRepositoryImpl(
+            dataSource = get<SettingsDataSource>()
+        )
+    }
 }
 
 val settingsDomainModule = module {
     factory {
         SettingsReducer()
+    }
+    factory {
+        InitializeLanguagesUseCase(
+            languageDao = get<AppDatabase>().languageDao()
+        )
     }
 }
 

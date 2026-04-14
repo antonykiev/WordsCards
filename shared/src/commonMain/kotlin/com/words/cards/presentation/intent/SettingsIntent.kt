@@ -8,4 +8,5 @@ sealed class SettingsIntent {
         val isPrimary: Boolean,
         val language: Language.Selected
     ) : SettingsIntent()
+    data object OnNextClicked : SettingsIntent()
 }

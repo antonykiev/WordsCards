@@ -31,6 +31,9 @@ class SettingsReducer : Reducer<SettingsEvent, SettingsScreenContent, SettingsIn
                     state.copy(content = newContent)
                 }
             }
+            SettingsIntent.OnNextClicked -> {
+                updateEvent(SettingsEvent.OnNextClicked)
+            }
         }
     }
 }

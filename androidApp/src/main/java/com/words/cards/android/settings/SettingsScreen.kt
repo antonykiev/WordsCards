@@ -56,6 +56,7 @@ fun SettingsScreen(
     LaunchedEffect(state.event) {
         when (val event = state.event) {
             SettingsEvent.Empty -> Unit
+            SettingsEvent.OnNextClicked -> onNextClicked()
         }
     }
 
@@ -65,7 +66,9 @@ fun SettingsScreen(
         onLanguageSelected = { isPrimary, language ->
             viewModel.onIntent(SettingsIntent.SelectLanguage(isPrimary, language))
         },
-        onNextClicked = onNextClicked
+        onNextClicked = {
+            viewModel.onIntent(SettingsIntent.OnNextClicked)
+        }
     )
 }
 
