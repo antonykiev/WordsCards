@@ -26,6 +26,7 @@ import com.words.cards.domain.RemoveQuotesUseCase
 import com.words.cards.domain.SaveSettingsUseCase
 import com.words.cards.domain.repository.WordLocalRepository
 import com.words.cards.presentation.reducer.AboutReducer
+import com.words.cards.presentation.reducer.CardSettingsReducer
 import com.words.cards.presentation.reducer.LoginReducer
 import com.words.cards.presentation.reducer.MainReducer
 import com.words.cards.presentation.reducer.SplashReducer
@@ -74,6 +75,12 @@ val loginDomainModule = module {
 val aboutDomainModule = module {
     factory {
         AboutReducer()
+    }
+}
+
+val cardSettingsDomainModule = module {
+    factory {
+        CardSettingsReducer()
     }
 }
 
@@ -191,6 +198,7 @@ val sharedDomainModule = buildList {
     add(mainDomainModule)
     add(loginDomainModule)
     add(aboutDomainModule)
+    add(cardSettingsDomainModule)
     add(wordListDomainModule)
     add(newWordDomainModule)
     add(wordDomainModule)

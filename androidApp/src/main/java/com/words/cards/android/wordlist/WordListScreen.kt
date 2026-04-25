@@ -76,6 +76,7 @@ fun WordListScreen(
     modifier: Modifier = Modifier,
     onOpenNewWord: (word: String) -> Unit,
     onOpenWord: (wordId: Long) -> Unit,
+    onCardSettingsSelected: () -> Unit,
     onAboutSelected: () -> Unit
 ) {
     val viewModel = koinViewModel<WordListViewModel>()
@@ -109,6 +110,9 @@ fun WordListScreen(
         onPlusClicked = {
             viewModel.onIntent(WordListIntent.OnPlusClicked(it))
         },
+        onCardSettingsSelected = {
+            onCardSettingsSelected()
+        },
         onWordClicked = { wordId ->
             viewModel.onIntent(WordListIntent.OnWordClicked(wordId))
         },
@@ -126,6 +130,7 @@ fun WordListPaneWithDrawer(
     onValueChange: (String) -> Unit,
     onPlusClicked: (word: String) -> Unit,
     onWordClicked: (wordId: Long) -> Unit,
+    onCardSettingsSelected: () -> Unit,
     onAboutSelected: () -> Unit,
 ) {
     val drawerState = rememberDrawerState(DrawerValue.Closed)
@@ -138,6 +143,10 @@ fun WordListPaneWithDrawer(
                 DrawerMenu(
                     onItemSelected = {
                         scope.launch { drawerState.close() }
+                    },
+                    onCardSettingsSelected = {
+                        scope.launch { drawerState.close() }
+                        onCardSettingsSelected()
                     },
                     onAboutSelected = {
                         scope.launch { drawerState.close() }
@@ -371,6 +380,7 @@ fun WordItem(
 fun DrawerMenu(
     modifier: Modifier = Modifier,
     onItemSelected: () -> Unit,
+    onCardSettingsSelected: () -> Unit,
     onAboutSelected: () -> Unit,
 ) {
     Column(
@@ -399,7 +409,7 @@ fun DrawerMenu(
         )
         NavigationDrawerCardItem(
             text = "Card settings",
-            onItemSelected = onItemSelected
+            onItemSelected = onCardSettingsSelected
         )
         NavigationDrawerCardItem(
             text = "Change languages",
@@ -497,6 +507,7 @@ private fun WordListPanePreview() {
 private fun DrawerMenuPreview() {
     DrawerMenu(
         onItemSelected = { },
-        onAboutSelected = { }
+        onAboutSelected = { },
+        onCardSettingsSelected = { }
     )
 }

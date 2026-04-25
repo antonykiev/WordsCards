@@ -22,6 +22,7 @@ import androidx.navigation.compose.currentBackStackEntryAsState
 import androidx.navigation.compose.rememberNavController
 import androidx.navigation.navArgument
 import com.words.cards.android.about.AboutScreen
+import com.words.cards.android.card_settings.CardSettingsScreen
 import com.words.cards.android.login.LoginScreen
 import com.words.cards.android.settings.LanguageSettingsScreen
 import com.words.cards.android.splash.SplashScreen
@@ -113,6 +114,9 @@ class MainActivity : ComponentActivity() {
                     onOpenWord = { word ->
                         navController.navigate("word/$word")
                     },
+                    onCardSettingsSelected = {
+                        navController.navigate("card_settings")
+                    },
                     onAboutSelected = {
                         navController.navigate("about")
                     }
@@ -154,6 +158,13 @@ class MainActivity : ComponentActivity() {
             }
             composable("about") {
                 AboutScreen(
+                    onBack = {
+                        navController.popBackStack()
+                    }
+                )
+            }
+            composable("card_settings") {
+                CardSettingsScreen(
                     onBack = {
                         navController.popBackStack()
                     }
