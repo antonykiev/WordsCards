@@ -7,7 +7,7 @@ class SaveSettingsUseCase(
     private val settingsRepository: SettingsLocalRepository
 ) {
 
-    suspend operator fun invoke(
+    suspend fun save(
         learnedLanguageId: Long,
         originalLanguageId: Long,
     ) {
@@ -18,7 +18,25 @@ class SaveSettingsUseCase(
                 showTranscription = true,
                 showDescription = true,
                 showTranslation = true,
-                showExample = false
+                showExample = true
+            )
+        )
+    }
+
+    suspend fun update(
+        showTranscription: Boolean? = null,
+        showDescription: Boolean? = null,
+        showTranslation: Boolean? = null,
+        showExample: Boolean? = null,
+    ) {
+        val currentSettings = settingsRepository.getSettings().getOrNull() ?: return
+
+        settingsRepository.saveSettings(
+            currentSettings.copy(
+                showTranscription = showTranscription ?: currentSettings.showTranscription,
+                showDescription = showDescription ?: currentSettings.showDescription,
+                showTranslation = showTranslation ?: currentSettings.showTranslation,
+                showExample = showExample ?: currentSettings.showExample
             )
         )
     }

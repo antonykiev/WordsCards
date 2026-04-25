@@ -40,7 +40,7 @@ class SettingsReducer(
                 if (mutableState.value.content.primary is Language.Selected
                     && mutableState.value.content.secondary is Language.Selected
                 ) {
-                    saveSettingsUseCase(
+                    saveSettingsUseCase.save(
                         learnedLanguageId = (mutableState.value.content.secondary as Language.Selected).id,
                         originalLanguageId = (mutableState.value.content.primary as Language.Selected).id,
                     )

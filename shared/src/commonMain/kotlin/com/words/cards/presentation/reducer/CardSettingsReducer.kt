@@ -1,5 +1,7 @@
 package com.words.cards.presentation.reducer
 
+import com.words.cards.data.repository.SettingsLocalRepository
+import com.words.cards.domain.SaveSettingsUseCase
 import com.words.cards.presentation.event.CardSettingsEvent
 import com.words.cards.presentation.intent.CardSettingsIntent
 import com.words.cards.presentation.state.CardSettingsScreenContent
@@ -7,7 +9,10 @@ import com.words.cards.presentation.state.State
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.update
 
-class CardSettingsReducer : Reducer<CardSettingsEvent, CardSettingsScreenContent, CardSettingsIntent> {
+class CardSettingsReducer(
+    private val saveSettingsUseCase: SaveSettingsUseCase,
+    private val settingsRepository: SettingsLocalRepository,
+) : Reducer<CardSettingsEvent, CardSettingsScreenContent, CardSettingsIntent> {
     override val mutableState: MutableStateFlow<State<CardSettingsScreenContent, CardSettingsEvent>> =
         MutableStateFlow(
             State(
@@ -20,19 +25,20 @@ class CardSettingsReducer : Reducer<CardSettingsEvent, CardSettingsScreenContent
     override suspend fun processIntent(intent: CardSettingsIntent) {
         when (intent) {
             CardSettingsIntent.InitialLoad -> {
+                val settings = settingsRepository.getSettings().getOrNull()
                 mutableState.update {
                     it.copy(
                         isLoading = false,
                         content = CardSettingsScreenContent(
                             title = "Card Settings",
                             showTranscriptionLabel = "Show Transcription",
-                            isShowTranscriptionEnabled = true,
+                            isShowTranscriptionEnabled = settings?.showTranscription ?: true,
                             showDescriptionLabel = "Show Description",
-                            isShowDescriptionEnabled = true,
+                            isShowDescriptionEnabled = settings?.showDescription ?: true,
                             showTranslationLabel = "Show Translation",
-                            isShowTranslationEnabled = true,
+                            isShowTranslationEnabled = settings?.showTranslation ?: true,
                             showExampleLabel = "Show Example",
-                            isShowExampleEnabled = true
+                            isShowExampleEnabled = settings?.showExample ?: true
                         )
                     )
                 }
@@ -43,6 +49,7 @@ class CardSettingsReducer : Reducer<CardSettingsEvent, CardSettingsScreenContent
             }
 
             is CardSettingsIntent.OnShowTranscriptionToggled -> {
+                saveSettingsUseCase.update(showTranscription = intent.show)
                 mutableState.update {
                     it.copy(
                         content = it.content.copy(
@@ -53,6 +60,7 @@ class CardSettingsReducer : Reducer<CardSettingsEvent, CardSettingsScreenContent
             }
 
             is CardSettingsIntent.OnShowDescriptionToggled -> {
+                saveSettingsUseCase.update(showDescription = intent.show)
                 mutableState.update {
                     it.copy(
                         content = it.content.copy(
@@ -63,6 +71,7 @@ class CardSettingsReducer : Reducer<CardSettingsEvent, CardSettingsScreenContent
             }
 
             is CardSettingsIntent.OnShowTranslationToggled -> {
+                saveSettingsUseCase.update(showTranslation = intent.show)
                 mutableState.update {
                     it.copy(
                         content = it.content.copy(
@@ -73,6 +82,7 @@ class CardSettingsReducer : Reducer<CardSettingsEvent, CardSettingsScreenContent
             }
 
             is CardSettingsIntent.OnShowExampleToggled -> {
+                saveSettingsUseCase.update(showExample = intent.show)
                 mutableState.update {
                     it.copy(
                         content = it.content.copy(

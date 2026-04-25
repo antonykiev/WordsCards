@@ -80,7 +80,10 @@ val aboutDomainModule = module {
 
 val cardSettingsDomainModule = module {
     factory {
-        CardSettingsReducer()
+        CardSettingsReducer(
+            saveSettingsUseCase = get<SaveSettingsUseCase>(),
+            settingsRepository = get<SettingsLocalRepository>(),
+        )
     }
 }
 
