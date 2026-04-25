@@ -21,16 +21,15 @@ import androidx.navigation.compose.composable
 import androidx.navigation.compose.currentBackStackEntryAsState
 import androidx.navigation.compose.rememberNavController
 import androidx.navigation.navArgument
+import com.words.cards.android.about.AboutScreen
 import com.words.cards.android.login.LoginScreen
-import com.words.cards.android.settings.SettingsScreen
+import com.words.cards.android.settings.LanguageSettingsScreen
 import com.words.cards.android.splash.SplashScreen
 import com.words.cards.android.word.WordScreen
 import com.words.cards.android.word_new.NewWordScreen
 import com.words.cards.android.wordlist.WordListScreen
 import com.words.cards.presentation.event.MainEvent
-import com.words.cards.presentation.event.NewWordEvent
 import com.words.cards.presentation.intent.MainIntent
-import com.words.cards.presentation.state.NewWordScreenContent
 import com.words.cards.presentation.state.State
 import org.koin.androidx.compose.koinViewModel
 
@@ -98,7 +97,7 @@ class MainActivity : ComponentActivity() {
                 )
             }
             composable("settings") {
-                SettingsScreen(
+                LanguageSettingsScreen(
                     onNextClicked = {
                         navController.navigate("word_list")
                     }
@@ -113,6 +112,9 @@ class MainActivity : ComponentActivity() {
                     },
                     onOpenWord = { word ->
                         navController.navigate("word/$word")
+                    },
+                    onAboutSelected = {
+                        navController.navigate("about")
                     }
                 )
             }
@@ -145,6 +147,13 @@ class MainActivity : ComponentActivity() {
                     modifier = Modifier
                         .padding(paddingValues),
                     wordId = wordId,
+                    onBack = {
+                        navController.popBackStack()
+                    }
+                )
+            }
+            composable("about") {
+                AboutScreen(
                     onBack = {
                         navController.popBackStack()
                     }

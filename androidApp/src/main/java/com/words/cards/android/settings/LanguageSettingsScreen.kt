@@ -42,7 +42,7 @@ import com.words.cards.presentation.state.SettingsScreenContent
 import org.koin.androidx.compose.koinViewModel
 
 @Composable
-fun SettingsScreen(
+fun LanguageSettingsScreen(
     modifier: Modifier = Modifier,
     onNextClicked: () -> Unit,
 ) {
@@ -309,7 +309,7 @@ private fun CountryPickerBottomSheetPreview() {
 
 @Preview(showBackground = true)
 @Composable
-fun SettingsPanePreview() {
+fun LanguageSettingsScreenPreview() {
 
     val content = SettingsScreenContent(
         title = "Language Settings",

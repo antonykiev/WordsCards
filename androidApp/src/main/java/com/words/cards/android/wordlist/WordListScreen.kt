@@ -76,6 +76,7 @@ fun WordListScreen(
     modifier: Modifier = Modifier,
     onOpenNewWord: (word: String) -> Unit,
     onOpenWord: (wordId: Long) -> Unit,
+    onAboutSelected: () -> Unit
 ) {
     val viewModel = koinViewModel<WordListViewModel>()
     val state by viewModel.state.collectAsStateWithLifecycle()
@@ -110,6 +111,9 @@ fun WordListScreen(
         },
         onWordClicked = { wordId ->
             viewModel.onIntent(WordListIntent.OnWordClicked(wordId))
+        },
+        onAboutSelected = {
+            onAboutSelected()
         }
     )
 }
@@ -122,6 +126,7 @@ fun WordListPaneWithDrawer(
     onValueChange: (String) -> Unit,
     onPlusClicked: (word: String) -> Unit,
     onWordClicked: (wordId: Long) -> Unit,
+    onAboutSelected: () -> Unit,
 ) {
     val drawerState = rememberDrawerState(DrawerValue.Closed)
     val scope = rememberCoroutineScope()
@@ -134,6 +139,10 @@ fun WordListPaneWithDrawer(
                     onItemSelected = {
                         scope.launch { drawerState.close() }
                     },
+                    onAboutSelected = {
+                        scope.launch { drawerState.close() }
+                        onAboutSelected()
+                    }
                 )
             }
         }
@@ -362,6 +371,7 @@ fun WordItem(
 fun DrawerMenu(
     modifier: Modifier = Modifier,
     onItemSelected: () -> Unit,
+    onAboutSelected: () -> Unit,
 ) {
     Column(
         modifier = modifier
@@ -405,7 +415,7 @@ fun DrawerMenu(
         )
         NavigationDrawerCardItem(
             text = "About this app",
-            onItemSelected = onItemSelected
+            onItemSelected = onAboutSelected
         )
     }
 }
@@ -487,5 +497,6 @@ private fun WordListPanePreview() {
 private fun DrawerMenuPreview() {
     DrawerMenu(
         onItemSelected = { },
+        onAboutSelected = { }
     )
 }
