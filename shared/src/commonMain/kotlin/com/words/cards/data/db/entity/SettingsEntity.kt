@@ -11,4 +11,9 @@ data class SettingsEntity(
     val id: Long = 1,
     @ColumnInfo(name = "learned_language") val learnedLanguageId: Int,
     @ColumnInfo(name = "original_language") val originalLanguageId: Int,
+
+    @ColumnInfo(name = "show_transcription") val showTranscription: Boolean,
+    @ColumnInfo(name = "show_description") val showDescription: Boolean,
+    @ColumnInfo(name = "show_translation") val showTranslation: Boolean,
+    @ColumnInfo(name = "show_example") val showExample: Boolean,
 )

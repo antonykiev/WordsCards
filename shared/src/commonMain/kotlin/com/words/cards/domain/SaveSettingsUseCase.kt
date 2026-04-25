@@ -14,7 +14,11 @@ class SaveSettingsUseCase(
         settingsRepository.saveSettings(
             SettingsEntity(
                 learnedLanguageId = learnedLanguageId.toInt(),
-                originalLanguageId = originalLanguageId.toInt()
+                originalLanguageId = originalLanguageId.toInt(),
+                showTranscription = true,
+                showDescription = true,
+                showTranslation = true,
+                showExample = false
             )
         )
     }
