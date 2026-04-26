@@ -14,8 +14,10 @@ data class WordListScreenContent(
 
 data class WordItem(
     val id: Long,
-    val word: String,
-    val transcription: String,
+    val word: String,    val transcription: String,
+    val showTranscription: Boolean,
     val translation: String,
-    val description: String
+    val showTranslation: Boolean,
+    val description: String,
+    val showDescription: Boolean,
 )

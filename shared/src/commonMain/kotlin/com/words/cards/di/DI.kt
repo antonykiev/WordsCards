@@ -134,7 +134,9 @@ val wordDomainModule = module {
         )
     }
     single {
-        MapWordEntityToWordItem()
+        MapWordEntityToWordItem(
+            settingsRepository = get<SettingsLocalRepository>()
+        )
     }
 }
 

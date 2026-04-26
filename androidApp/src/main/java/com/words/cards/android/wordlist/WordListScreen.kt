@@ -361,18 +361,42 @@ fun WordItem(
                     color = Color.Black
                 )
             )
-            Spacer(Modifier.width(8.dp))
+            if (item.showTranscription) {
+                Spacer(Modifier.width(8.dp))
+                Text(
+                    text = item.transcription,
+                    style = TextStyle(
+                        fontSize = 18.sp,
+                        fontWeight = FontWeight.Light,
+                        color = Color.Gray
+                    )
+                )
+            }
+        }
+
+        if (item.showTranslation) {
+            Spacer(Modifier.height(8.dp))
             Text(
-                item.transcription,
+                text = item.translation,
                 style = TextStyle(
-                    fontSize = 18.sp,
-                    fontWeight = FontWeight.Light,
-                    color = Color.Gray
+                    fontSize = 16.sp,
+                    fontWeight = FontWeight.Medium,
+                    color = Color.Black
                 )
             )
         }
-        Spacer(Modifier.height(8.dp))
-        Text(item.description)
+
+        if (item.showDescription) {
+            Spacer(Modifier.height(8.dp))
+            Text(
+                text = item.description,
+                style = TextStyle(
+                    fontSize = 14.sp,
+                    fontWeight = FontWeight.Normal,
+                    color = Color.DarkGray
+                )
+            )
+        }
     }
 }
 
@@ -472,25 +496,34 @@ private fun WordListPanePreview() {
             searchWord = "flabbergasted",
             wordsItems = listOf(
                 WordItem(
+                    id = 1,
+                    showTranscription = true,
+                    showTranslation = true,
+                    showDescription = true,
                     word = "flabbergasted",
                     translation = "ошеломленный",
                     transcription = "[flæbərɡæstɪd]",
                     description = "very surprised",
-                    id = 1
                 ),
                 WordItem(
+                    id = 2,
                     word = "flabbergasted",
                     translation = "ошеломленный",
                     transcription = "[flæbərɡæstɪd]",
                     description = "very surprised",
-                    id = 2
+                    showTranscription = true,
+                    showTranslation = true,
+                    showDescription = true,
                 ),
                 WordItem(
+                    id = 3,
                     word = "flabbergasted",
                     translation = "ошеломленный",
                     transcription = "[flæbərɡæstɪd]",
                     description = "very surprised",
-                    id = 3
+                    showTranscription = true,
+                    showTranslation = true,
+                    showDescription = true,
                 )
             )
         ),
